@@ -6,7 +6,7 @@
 package org.jetbrains.kotlin.ir.backend.js
 
 import com.intellij.openapi.project.Project
-import org.jetbrains.kotlin.backend.common.LoggingContext
+import org.jetbrains.kotlin.backend.common.EmptyLoggingContext
 import org.jetbrains.kotlin.backend.common.serialization.DescriptorTable
 import org.jetbrains.kotlin.library.impl.buildKoltinLibrary
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
@@ -60,12 +60,6 @@ fun loadKlib(klibPath: String) =
     createKotlinLibrary(KFile(KFile(klibPath).absolutePath))
 
 internal val JS_KLIBRARY_CAPABILITY = ModuleDescriptor.Capability<KotlinLibrary>("JS KLIBRARY")
-
-private val emptyLoggingContext = object : LoggingContext {
-    override var inVerbosePhase = false
-
-    override fun log(message: () -> String) {}
-}
 
 private val CompilerConfiguration.metadataVersion
     get() = get(CommonConfigurationKeys.METADATA_VERSION) as? JsKlibMetadataVersion ?: JsKlibMetadataVersion.INSTANCE
@@ -124,7 +118,7 @@ fun loadIr(
     val symbolTable = psi2IrContext.symbolTable
     val moduleDescriptor = psi2IrContext.moduleDescriptor
 
-    val deserializer = JsIrLinker(moduleDescriptor, JsMangler, emptyLoggingContext, irBuiltIns, symbolTable)
+    val deserializer = JsIrLinker(moduleDescriptor, JsMangler, EmptyLoggingContext, irBuiltIns, symbolTable)
 
     val deserializedModuleFragments = allDependencies.map {
         deserializer.deserializeIrModuleHeader(depsDescriptors.getModuleDescriptor(it))!!
@@ -282,7 +276,7 @@ fun serializeModuleIntoKlib(
 ) {
     val declarationTable = JsDeclarationTable(moduleFragment.irBuiltins, DescriptorTable())
 
-    val serializedIr = JsIrModuleSerializer(emptyLoggingContext, declarationTable).serializedIrModule(moduleFragment)
+    val serializedIr = JsIrModuleSerializer(EmptyLoggingContext, declarationTable).serializedIrModule(moduleFragment)
     val serializer = JsKlibMetadataSerializationUtil
 
     val moduleDescription =

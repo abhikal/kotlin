@@ -9,10 +9,13 @@ import org.jetbrains.kotlin.backend.common.CommonBackendContext
 import org.jetbrains.kotlin.backend.common.ir.Ir
 import org.jetbrains.kotlin.backend.common.phaser.PhaseConfig
 import org.jetbrains.kotlin.backend.jvm.codegen.IrTypeMapper
+import org.jetbrains.kotlin.backend.common.serialization.DeclarationTable
+import org.jetbrains.kotlin.backend.common.serialization.DescriptorTable
 import org.jetbrains.kotlin.backend.jvm.descriptors.JvmDeclarationFactory
 import org.jetbrains.kotlin.backend.jvm.descriptors.JvmSharedVariablesManager
 import org.jetbrains.kotlin.backend.jvm.intrinsics.IrIntrinsicMethods
 import org.jetbrains.kotlin.backend.jvm.lower.inlineclasses.InlineClassAbi
+import org.jetbrains.kotlin.backend.jvm.serialization.JvmDeclarationTable
 import org.jetbrains.kotlin.codegen.ClassBuilder
 import org.jetbrains.kotlin.codegen.state.GenerationState
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
@@ -110,4 +113,6 @@ class JvmBackendContext(
 
         override fun shouldGenerateHandlerParameterForDefaultBodyFun() = true
     }
+
+    val declarationTable: DeclarationTable = JvmDeclarationTable(irBuiltIns, DescriptorTable())
 }

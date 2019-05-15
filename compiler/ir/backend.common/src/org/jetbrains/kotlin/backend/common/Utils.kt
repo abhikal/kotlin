@@ -33,3 +33,10 @@ fun <T: Any> T.onlyIf(condition: T.()->Boolean, then: (T)->Unit): T {
     if (this.condition()) then(this)
     return this
 }
+
+object EmptyLoggingContext : LoggingContext {
+    override var inVerbosePhase = false
+
+    override fun log(message: () -> String) {}
+}
+

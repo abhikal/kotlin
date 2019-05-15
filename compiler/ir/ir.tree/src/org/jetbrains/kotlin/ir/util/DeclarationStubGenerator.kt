@@ -49,7 +49,8 @@ class DeclarationStubGenerator(
         }
 
 
-    private val typeTranslator = TypeTranslator(lazyTable, languageVersionSettings, moduleDescriptor.builtIns, LazyScopedTypeParametersResolver(lazyTable), true)
+    private val typeTranslator =
+        TypeTranslator(lazyTable, languageVersionSettings, moduleDescriptor.builtIns, LazyScopedTypeParametersResolver(lazyTable), true)
     private val constantValueGenerator = ConstantValueGenerator(moduleDescriptor, lazyTable)
 
     private val facadeClassMap = mutableMapOf<DeserializedContainerSource, IrClass?>()
@@ -63,7 +64,7 @@ class DeclarationStubGenerator(
         for (irProvider in irProviders)
             irProvider.getDeclaration(symbol)?.let { return it }
         return null
-    } 
+    }
 
     fun generateOrGetEmptyExternalPackageFragmentStub(descriptor: PackageFragmentDescriptor): IrExternalPackageFragment {
         val referenced = symbolTable.referenceExternalPackageFragment(descriptor)

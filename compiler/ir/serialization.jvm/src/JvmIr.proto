@@ -1,0 +1,37 @@
+syntax = "proto2";
+package org.jetbrains.kotlin.backend.jvm.serialization.proto;
+import "compiler/ir/serialization.common/src/KotlinIr.proto";
+
+option java_outer_classname = "JvmIr";
+option optimize_for = LITE_RUNTIME;
+
+/* Stored in JVM .class annotations */
+
+message UniqIdInfo {
+  required int64 id = 1;
+  required common.serialization.String toplevel_fq_name = 2;
+}
+
+message UniqIdTable {
+  repeated UniqIdInfo infos = 1;
+}
+
+message AuxTables {
+  required common.serialization.IrSymbolTable symbol_table = 1;
+  required common.serialization.IrTypeTable type_table = 2;
+  required common.serialization.StringTable string_table = 3;
+  required UniqIdTable uniq_id_table = 4;
+}
+
+message JvmIrFile {
+  required common.serialization.IrDeclarationContainer declaration_container = 1;
+  required common.serialization.Annotations annotations = 2;
+  required AuxTables aux_tables = 3;
+}
+
+message JvmIrClass {
+  required common.serialization.IrClass ir_class = 1;
+  required AuxTables aux_tables = 2;
+}
+
+

@@ -36,9 +36,9 @@ class ModuleGenerator(override val context: GeneratorContext) : Generator {
 
     private val constantValueGenerator = context.constantValueGenerator
 
-    fun generateModuleFragment(ktFiles: Collection<KtFile>): IrModuleFragment =
+    fun generateModuleFragment(ktFiles: Collection<KtFile>, deserializer: IrDeserializer): IrModuleFragment =
         generateModuleFragmentWithoutDependencies(ktFiles).also { irModule ->
-            generateUnboundSymbolsAsDependencies(irModule)
+            generateUnboundSymbolsAsDependencies(irModule, deserializer)
         }
 
     fun generateModuleFragmentWithoutDependencies(ktFiles: Collection<KtFile>): IrModuleFragment =
@@ -48,7 +48,7 @@ class ModuleGenerator(override val context: GeneratorContext) : Generator {
 
     fun generateUnboundSymbolsAsDependencies(
         irModule: IrModuleFragment,
-        deserializer: IrDeserializer? = null,
+        deserializer: IrDeserializer?,
         irProviders: List<IrProvider> = emptyList(),
         facadeClassGenerator: (DeserializedContainerSource) -> IrClass? = { null }
     ) {

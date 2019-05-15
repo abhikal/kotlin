@@ -24,11 +24,11 @@ import org.jetbrains.kotlin.resolve.scopes.MemberScope
 abstract class DescriptorReferenceDeserializer(
     val currentModule: ModuleDescriptor,
     val mangler: KotlinMangler,
-    val builtIns: IrBuiltIns,
+    val builtIns: IrBuiltIns?,
     val resolvedForwardDeclarations: MutableMap<UniqIdKey, UniqIdKey>
 ) : DescriptorUniqIdAware {
 
-    protected open fun resolveSpecialDescriptor(fqn: FqName) = builtIns.builtIns.getBuiltInClassByFqName(fqn)
+    protected open fun resolveSpecialDescriptor(fqn: FqName) = builtIns!!.builtIns.getBuiltInClassByFqName(fqn)
 
     protected open fun checkIfSpecialDescriptorId(id: Long) = with(mangler) { id.isSpecial }
 

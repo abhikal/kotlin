@@ -7,11 +7,13 @@ package org.jetbrains.kotlin.backend.common.serialization
 
 import org.jetbrains.kotlin.backend.common.LoggingContext
 import org.jetbrains.kotlin.backend.common.ir.ir2string
+import org.jetbrains.kotlin.backend.common.lower.parents
 import org.jetbrains.kotlin.builtins.FunctionInterfacePackageFragment
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.ClassKind.*
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.ReceiverParameterDescriptor
+import org.jetbrains.kotlin.descriptors.Visibilities.isPrivate
 import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.SourceManager
@@ -125,7 +127,7 @@ open class IrModuleSerializer(
     val logger: LoggingContext,
     val declarationTable: DeclarationTable,
     val mangler: KotlinMangler,
-    val bodiesOnlyForInlines: Boolean = false
+    val externallyVisibleOnly: Boolean = false
 ) {
 
     private val loopIndex = mutableMapOf<IrLoop, Int>()
@@ -1027,7 +1029,7 @@ open class IrModuleSerializer(
         function.valueParameters.forEach {
             proto.addValueParameter(serializeIrValueParameter(it))
         }
-        if (!bodiesOnlyForInlines || function.isInline) {
+        if (!externallyVisibleOnly || function.isInline) {
             function.body?.let { proto.body = serializeStatement(it) }
         }
         return proto.build()
@@ -1117,8 +1119,13 @@ open class IrModuleSerializer(
             .setIsExternal(field.isExternal)
             .setIsStatic(field.isStatic)
             .setType(serializeIrType(field.type))
+        val inLocalClass = field.parents.any { it is IrFunction }
         val initializer = field.initializer?.expression
-        if (initializer != null) {
+        if (initializer != null && (
+                    !externallyVisibleOnly ||
+                            inLocalClass ||
+                            field.correspondingPropertySymbol?.owner?.isConst == true)
+        ) {
             proto.initializer = serializeExpression(initializer)
         }
         return proto.build()
@@ -1136,10 +1143,12 @@ open class IrModuleSerializer(
         return proto.build()
     }
 
-    private fun serializeIrDeclarationContainer(declarations: List<IrDeclaration>): ProtoDeclarationContainer {
+    protected fun serializeIrDeclarationContainer(declarations: List<IrDeclaration>): ProtoDeclarationContainer {
         val proto = ProtoDeclarationContainer.newBuilder()
         declarations.forEach {
             //if (it is IrDeclarationWithVisibility && it.visibility == Visibilities.INVISIBLE_FAKE) return@forEach
+            if (externallyVisibleOnly && it is IrDeclarationWithVisibility && isPrivate(it.visibility))
+                return@forEach
             proto.addDeclaration(serializeDeclaration(it))
         }
         return proto.build()
@@ -1154,7 +1163,7 @@ open class IrModuleSerializer(
         OBJECT -> ProtoClassKind.OBJECT
     }
 
-    private fun serializeIrClass(clazz: IrClass): ProtoClass {
+    protected fun serializeIrClass(clazz: IrClass): ProtoClass {
         val proto = ProtoClass.newBuilder()
             .setBase(serializeIrDeclarationBase(clazz))
             .setName(serializeName(clazz.name))
@@ -1191,8 +1200,10 @@ open class IrModuleSerializer(
             .setBase(serializeIrDeclarationBase(enumEntry))
             .setName(serializeName(enumEntry.name))
 
-        enumEntry.initializerExpression?.let {
-            proto.initializer = serializeExpression(it)
+        if (!externallyVisibleOnly) {
+            enumEntry.initializerExpression?.let {
+                proto.initializer = serializeExpression(it)
+            }
         }
         enumEntry.correspondingClass?.let {
             proto.correspondingClass = serializeIrClass(it)
@@ -1265,14 +1276,15 @@ open class IrModuleSerializer(
             proto.addDeclarationId(protoUniqId(uniqId))
         }
 
-        // TODO: is it Konan specific?
+        // TODO: is it Konan specific? -- definitely not applicable to JVM
 
-        // Make sure that all top level properties are initialized on library's load.
-        file.declarations
-            .filterIsInstance<IrProperty>()
-            .filter { it.backingField?.initializer != null && !it.isConst }
-            .forEach { proto.addExplicitlyExportedToCompiler(serializeIrSymbol(it.backingField!!.symbol)) }
-
+        if (!externallyVisibleOnly) {
+            // Make sure that all top level properties are initialized on library's load.
+            file.declarations
+                .filterIsInstance<IrProperty>()
+                .filter { it.backingField?.initializer != null && !it.isConst }
+                .forEach { proto.addExplicitlyExportedToCompiler(serializeIrSymbol(it.backingField!!.symbol)) }
+        }
         // TODO: Konan specific
 
         file.acceptVoid(object : IrElementVisitorVoid {

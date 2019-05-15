@@ -35,6 +35,8 @@ interface IrProvider {
 
 interface IrDeserializer : IrProvider {
     fun declareForwardDeclarations()
+
+    var successfullyInvokedLately: Boolean
 }
 
 interface ReferenceSymbolTable {

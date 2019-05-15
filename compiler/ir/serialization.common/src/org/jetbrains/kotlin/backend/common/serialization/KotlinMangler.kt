@@ -259,7 +259,7 @@ abstract class KotlinManglerImpl : KotlinMangler {
 
     private val IrProperty.symbolName: String
         get() {
-            val extensionReceiver: String = getter?.extensionReceiverParameter?.extensionReceiverNamePart ?: ""
+            val extensionReceiver: String = (getter ?: setter)?.extensionReceiverParameter?.extensionReceiverNamePart ?: ""
 
             val containingDeclarationPart = parent.fqNameForIrSerialization.let {
                 if (it.isRoot) "" else "$it."

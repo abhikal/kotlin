@@ -176,6 +176,13 @@ class IrBuiltIns(
         else -> error("No KProperty for n=$n mutable=$mutable")
     }
 
+    val classes = listOf(
+        anyClass, booleanClass, charClass, numberClass, byteClass, shortClass, intClass, longClass, floatClass, doubleClass,
+        nothingClass, unitClass, stringClass, collectionClass, arrayClass, throwableClass,
+        kCallableClass, kPropertyClass, kDeclarationContainerClass, kClassClass,
+        kProperty0Class, kProperty1Class, kProperty2Class, kMutableProperty0Class, kMutableProperty1Class, kMutableProperty2Class
+    )
+
     // TODO switch to IrType
     val primitiveTypes = listOf(bool, char, byte, short, int, long, float, double)
     val primitiveTypesWithComparisons = listOf(char, byte, short, int, long, float, double)

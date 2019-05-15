@@ -8,16 +8,23 @@ public final class DebugJvmProtoBuf {
   public static void registerAllExtensions(
       org.jetbrains.kotlin.protobuf.ExtensionRegistry registry) {
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.constructorSignature);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.constructorUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.methodSignature);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.lambdaClassOriginName);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.functionUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.propertySignature);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.flags);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.propertyUniqId);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.enumEntryUniqId);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.valueParamUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.typeAnnotation);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.isRaw);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.typeParameterAnnotation);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.typeParamUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.classModuleName);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.classLocalVariable);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.anonymousObjectOriginName);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.classUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.packageModuleName);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.packageLocalVariable);
   }
@@ -4510,6 +4517,411 @@ public final class DebugJvmProtoBuf {
     // @@protoc_insertion_point(class_scope:org.jetbrains.kotlin.metadata.jvm.JvmPropertySignature)
   }
 
+  public interface DescriptorUniqIdOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:org.jetbrains.kotlin.metadata.jvm.DescriptorUniqId)
+      org.jetbrains.kotlin.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required int64 index = 1;</code>
+     */
+    boolean hasIndex();
+    /**
+     * <code>required int64 index = 1;</code>
+     */
+    long getIndex();
+  }
+  /**
+   * Protobuf type {@code org.jetbrains.kotlin.metadata.jvm.DescriptorUniqId}
+   */
+  public static final class DescriptorUniqId extends
+      org.jetbrains.kotlin.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:org.jetbrains.kotlin.metadata.jvm.DescriptorUniqId)
+      DescriptorUniqIdOrBuilder {
+    // Use DescriptorUniqId.newBuilder() to construct.
+    private DescriptorUniqId(org.jetbrains.kotlin.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private DescriptorUniqId(boolean noInit) { this.unknownFields = org.jetbrains.kotlin.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final DescriptorUniqId defaultInstance;
+    public static DescriptorUniqId getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public DescriptorUniqId getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final org.jetbrains.kotlin.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final org.jetbrains.kotlin.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DescriptorUniqId(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      org.jetbrains.kotlin.protobuf.UnknownFieldSet.Builder unknownFields =
+          org.jetbrains.kotlin.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              index_ = input.readInt64();
+              break;
+            }
+          }
+        }
+      } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final org.jetbrains.kotlin.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_descriptor;
+    }
+
+    protected org.jetbrains.kotlin.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class, org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.Builder.class);
+    }
+
+    public static org.jetbrains.kotlin.protobuf.Parser<DescriptorUniqId> PARSER =
+        new org.jetbrains.kotlin.protobuf.AbstractParser<DescriptorUniqId>() {
+      public DescriptorUniqId parsePartialFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+        return new DescriptorUniqId(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public org.jetbrains.kotlin.protobuf.Parser<DescriptorUniqId> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int INDEX_FIELD_NUMBER = 1;
+    private long index_;
+    /**
+     * <code>required int64 index = 1;</code>
+     */
+    public boolean hasIndex() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required int64 index = 1;</code>
+     */
+    public long getIndex() {
+      return index_;
+    }
+
+    private void initFields() {
+      index_ = 0L;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasIndex()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(org.jetbrains.kotlin.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt64(1, index_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeInt64Size(1, index_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(byte[] data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(
+        byte[] data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseDelimitedFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        org.jetbrains.kotlin.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code org.jetbrains.kotlin.metadata.jvm.DescriptorUniqId}
+     */
+    public static final class Builder extends
+        org.jetbrains.kotlin.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:org.jetbrains.kotlin.metadata.jvm.DescriptorUniqId)
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqIdOrBuilder {
+      public static final org.jetbrains.kotlin.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_descriptor;
+      }
+
+      protected org.jetbrains.kotlin.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class, org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.Builder.class);
+      }
+
+      // Construct using org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          org.jetbrains.kotlin.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (org.jetbrains.kotlin.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        index_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public org.jetbrains.kotlin.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_descriptor;
+      }
+
+      public org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId getDefaultInstanceForType() {
+        return org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance();
+      }
+
+      public org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId build() {
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId buildPartial() {
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId result = new org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.index_ = index_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(org.jetbrains.kotlin.protobuf.Message other) {
+        if (other instanceof org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId) {
+          return mergeFrom((org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId other) {
+        if (other == org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance()) return this;
+        if (other.hasIndex()) {
+          setIndex(other.getIndex());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasIndex()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long index_ ;
+      /**
+       * <code>required int64 index = 1;</code>
+       */
+      public boolean hasIndex() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required int64 index = 1;</code>
+       */
+      public long getIndex() {
+        return index_;
+      }
+      /**
+       * <code>required int64 index = 1;</code>
+       */
+      public Builder setIndex(long value) {
+        bitField0_ |= 0x00000001;
+        index_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int64 index = 1;</code>
+       */
+      public Builder clearIndex() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        index_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:org.jetbrains.kotlin.metadata.jvm.DescriptorUniqId)
+    }
+
+    static {
+      defaultInstance = new DescriptorUniqId(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:org.jetbrains.kotlin.metadata.jvm.DescriptorUniqId)
+  }
+
   public static final int CONSTRUCTOR_SIGNATURE_FIELD_NUMBER = 100;
   /**
    * <code>extend .org.jetbrains.kotlin.metadata.Constructor { ... }</code>
@@ -4521,6 +4933,17 @@ public final class DebugJvmProtoBuf {
           .newFileScopedGeneratedExtension(
         org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.JvmMethodSignature.class,
         org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.JvmMethodSignature.getDefaultInstance());
+  public static final int CONSTRUCTOR_UNIQ_ID_FIELD_NUMBER = 101;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.Constructor { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.Constructor,
+      org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId> constructorUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class,
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance());
   public static final int METHOD_SIGNATURE_FIELD_NUMBER = 100;
   /**
    * <code>extend .org.jetbrains.kotlin.metadata.Function { ... }</code>
@@ -4548,6 +4971,17 @@ public final class DebugJvmProtoBuf {
           .newFileScopedGeneratedExtension(
         java.lang.Integer.class,
         null);
+  public static final int FUNCTION_UNIQ_ID_FIELD_NUMBER = 102;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.Function { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.Function,
+      org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId> functionUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class,
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance());
   public static final int PROPERTY_SIGNATURE_FIELD_NUMBER = 100;
   /**
    * <code>extend .org.jetbrains.kotlin.metadata.Property { ... }</code>
@@ -4575,6 +5009,39 @@ public final class DebugJvmProtoBuf {
           .newFileScopedGeneratedExtension(
         java.lang.Integer.class,
         null);
+  public static final int PROPERTY_UNIQ_ID_FIELD_NUMBER = 102;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.Property { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.Property,
+      org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId> propertyUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class,
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance());
+  public static final int ENUM_ENTRY_UNIQ_ID_FIELD_NUMBER = 100;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.EnumEntry { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.EnumEntry,
+      org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId> enumEntryUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class,
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance());
+  public static final int VALUE_PARAM_UNIQ_ID_FIELD_NUMBER = 100;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.ValueParameter { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.ValueParameter,
+      org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId> valueParamUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class,
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance());
   public static final int TYPE_ANNOTATION_FIELD_NUMBER = 100;
   /**
    * <code>extend .org.jetbrains.kotlin.metadata.Type { ... }</code>
@@ -4608,6 +5075,17 @@ public final class DebugJvmProtoBuf {
           .newFileScopedGeneratedExtension(
         org.jetbrains.kotlin.metadata.DebugProtoBuf.Annotation.class,
         org.jetbrains.kotlin.metadata.DebugProtoBuf.Annotation.getDefaultInstance());
+  public static final int TYPE_PARAM_UNIQ_ID_FIELD_NUMBER = 101;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.TypeParameter { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.TypeParameter,
+      org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId> typeParamUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class,
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance());
   public static final int CLASS_MODULE_NAME_FIELD_NUMBER = 101;
   /**
    * <code>extend .org.jetbrains.kotlin.metadata.Class { ... }</code>
@@ -4650,6 +5128,17 @@ public final class DebugJvmProtoBuf {
           .newFileScopedGeneratedExtension(
         java.lang.Integer.class,
         null);
+  public static final int CLASS_UNIQ_ID_FIELD_NUMBER = 104;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.Class { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.Class,
+      org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId> classUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.class,
+        org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.DescriptorUniqId.getDefaultInstance());
   public static final int PACKAGE_MODULE_NAME_FIELD_NUMBER = 101;
   /**
    * <code>extend .org.jetbrains.kotlin.metadata.Package { ... }</code>
@@ -4697,6 +5186,11 @@ public final class DebugJvmProtoBuf {
   private static
     org.jetbrains.kotlin.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_org_jetbrains_kotlin_metadata_jvm_JvmPropertySignature_fieldAccessorTable;
+  private static final org.jetbrains.kotlin.protobuf.Descriptors.Descriptor
+    internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_descriptor;
+  private static
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_fieldAccessorTable;
 
   public static org.jetbrains.kotlin.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4731,39 +5225,61 @@ public final class DebugJvmProtoBuf {
       "\006getter\030\003 \001(\01325.org.jetbrains.kotlin.met" +
       "adata.jvm.JvmMethodSignature\022E\n\006setter\030\004" +
       " \001(\01325.org.jetbrains.kotlin.metadata.jvm" +
-      ".JvmMethodSignature:\200\001\n\025constructor_sign" +
-      "ature\022*.org.jetbrains.kotlin.metadata.Co" +
-      "nstructor\030d \001(\01325.org.jetbrains.kotlin.m" +
-      "etadata.jvm.JvmMethodSignature:x\n\020method" +
-      "_signature\022\'.org.jetbrains.kotlin.metada",
-      "ta.Function\030d \001(\01325.org.jetbrains.kotlin" +
-      ".metadata.jvm.JvmMethodSignature:O\n\030lamb" +
-      "da_class_origin_name\022\'.org.jetbrains.kot" +
-      "lin.metadata.Function\030e \001(\005B\004\230\265\030\001:|\n\022pro" +
-      "perty_signature\022\'.org.jetbrains.kotlin.m" +
-      "etadata.Property\030d \001(\01327.org.jetbrains.k" +
-      "otlin.metadata.jvm.JvmPropertySignature:" +
-      "9\n\005flags\022\'.org.jetbrains.kotlin.metadata" +
-      ".Property\030e \001(\005:\0010:g\n\017type_annotation\022#." +
-      "org.jetbrains.kotlin.metadata.Type\030d \003(\013",
-      "2).org.jetbrains.kotlin.metadata.Annotat" +
-      "ion:3\n\006is_raw\022#.org.jetbrains.kotlin.met" +
-      "adata.Type\030e \001(\010:z\n\031type_parameter_annot" +
-      "ation\022,.org.jetbrains.kotlin.metadata.Ty" +
-      "peParameter\030d \003(\0132).org.jetbrains.kotlin" +
-      ".metadata.Annotation:E\n\021class_module_nam" +
-      "e\022$.org.jetbrains.kotlin.metadata.Class\030" +
-      "e \001(\005B\004\230\265\030\001:k\n\024class_local_variable\022$.or" +
-      "g.jetbrains.kotlin.metadata.Class\030f \003(\0132" +
-      "\'.org.jetbrains.kotlin.metadata.Property",
-      ":P\n\034anonymous_object_origin_name\022$.org.j" +
-      "etbrains.kotlin.metadata.Class\030g \001(\005B\004\230\265" +
-      "\030\001:I\n\023package_module_name\022&.org.jetbrain" +
-      "s.kotlin.metadata.Package\030e \001(\005B\004\230\265\030\001:o\n" +
-      "\026package_local_variable\022&.org.jetbrains." +
-      "kotlin.metadata.Package\030f \003(\0132\'.org.jetb" +
-      "rains.kotlin.metadata.PropertyB\022B\020DebugJ" +
-      "vmProtoBuf"
+      ".JvmMethodSignature\"!\n\020DescriptorUniqId\022" +
+      "\r\n\005index\030\001 \002(\003:\200\001\n\025constructor_signature" +
+      "\022*.org.jetbrains.kotlin.metadata.Constru" +
+      "ctor\030d \001(\01325.org.jetbrains.kotlin.metada" +
+      "ta.jvm.JvmMethodSignature:|\n\023constructor",
+      "_uniq_id\022*.org.jetbrains.kotlin.metadata" +
+      ".Constructor\030e \001(\01323.org.jetbrains.kotli" +
+      "n.metadata.jvm.DescriptorUniqId:x\n\020metho" +
+      "d_signature\022\'.org.jetbrains.kotlin.metad" +
+      "ata.Function\030d \001(\01325.org.jetbrains.kotli" +
+      "n.metadata.jvm.JvmMethodSignature:O\n\030lam" +
+      "bda_class_origin_name\022\'.org.jetbrains.ko" +
+      "tlin.metadata.Function\030e \001(\005B\004\230\265\030\001:v\n\020fu" +
+      "nction_uniq_id\022\'.org.jetbrains.kotlin.me" +
+      "tadata.Function\030f \001(\01323.org.jetbrains.ko",
+      "tlin.metadata.jvm.DescriptorUniqId:|\n\022pr" +
+      "operty_signature\022\'.org.jetbrains.kotlin." +
+      "metadata.Property\030d \001(\01327.org.jetbrains." +
+      "kotlin.metadata.jvm.JvmPropertySignature" +
+      ":9\n\005flags\022\'.org.jetbrains.kotlin.metadat" +
+      "a.Property\030e \001(\005:\0010:v\n\020property_uniq_id\022" +
+      "\'.org.jetbrains.kotlin.metadata.Property" +
+      "\030f \001(\01323.org.jetbrains.kotlin.metadata.j" +
+      "vm.DescriptorUniqId:y\n\022enum_entry_uniq_i" +
+      "d\022(.org.jetbrains.kotlin.metadata.EnumEn",
+      "try\030d \001(\01323.org.jetbrains.kotlin.metadat" +
+      "a.jvm.DescriptorUniqId:\177\n\023value_param_un" +
+      "iq_id\022-.org.jetbrains.kotlin.metadata.Va" +
+      "lueParameter\030d \001(\01323.org.jetbrains.kotli" +
+      "n.metadata.jvm.DescriptorUniqId:g\n\017type_" +
+      "annotation\022#.org.jetbrains.kotlin.metada" +
+      "ta.Type\030d \003(\0132).org.jetbrains.kotlin.met" +
+      "adata.Annotation:3\n\006is_raw\022#.org.jetbrai" +
+      "ns.kotlin.metadata.Type\030e \001(\010:z\n\031type_pa" +
+      "rameter_annotation\022,.org.jetbrains.kotli",
+      "n.metadata.TypeParameter\030d \003(\0132).org.jet" +
+      "brains.kotlin.metadata.Annotation:}\n\022typ" +
+      "e_param_uniq_id\022,.org.jetbrains.kotlin.m" +
+      "etadata.TypeParameter\030e \001(\01323.org.jetbra" +
+      "ins.kotlin.metadata.jvm.DescriptorUniqId" +
+      ":E\n\021class_module_name\022$.org.jetbrains.ko" +
+      "tlin.metadata.Class\030e \001(\005B\004\230\265\030\001:k\n\024class" +
+      "_local_variable\022$.org.jetbrains.kotlin.m" +
+      "etadata.Class\030f \003(\0132\'.org.jetbrains.kotl" +
+      "in.metadata.Property:P\n\034anonymous_object",
+      "_origin_name\022$.org.jetbrains.kotlin.meta" +
+      "data.Class\030g \001(\005B\004\230\265\030\001:p\n\rclass_uniq_id\022" +
+      "$.org.jetbrains.kotlin.metadata.Class\030h " +
+      "\001(\01323.org.jetbrains.kotlin.metadata.jvm." +
+      "DescriptorUniqId:I\n\023package_module_name\022" +
+      "&.org.jetbrains.kotlin.metadata.Package\030" +
+      "e \001(\005B\004\230\265\030\001:o\n\026package_local_variable\022&." +
+      "org.jetbrains.kotlin.metadata.Package\030f " +
+      "\003(\0132\'.org.jetbrains.kotlin.metadata.Prop" +
+      "ertyB\022B\020DebugJvmProtoBuf"
     };
     org.jetbrains.kotlin.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new org.jetbrains.kotlin.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4809,19 +5325,32 @@ public final class DebugJvmProtoBuf {
       org.jetbrains.kotlin.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_org_jetbrains_kotlin_metadata_jvm_JvmPropertySignature_descriptor,
         new java.lang.String[] { "Field", "SyntheticMethod", "Getter", "Setter", });
+    internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_fieldAccessorTable = new
+      org.jetbrains.kotlin.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_org_jetbrains_kotlin_metadata_jvm_DescriptorUniqId_descriptor,
+        new java.lang.String[] { "Index", });
     constructorSignature.internalInit(descriptor.getExtensions().get(0));
-    methodSignature.internalInit(descriptor.getExtensions().get(1));
-    lambdaClassOriginName.internalInit(descriptor.getExtensions().get(2));
-    propertySignature.internalInit(descriptor.getExtensions().get(3));
-    flags.internalInit(descriptor.getExtensions().get(4));
-    typeAnnotation.internalInit(descriptor.getExtensions().get(5));
-    isRaw.internalInit(descriptor.getExtensions().get(6));
-    typeParameterAnnotation.internalInit(descriptor.getExtensions().get(7));
-    classModuleName.internalInit(descriptor.getExtensions().get(8));
-    classLocalVariable.internalInit(descriptor.getExtensions().get(9));
-    anonymousObjectOriginName.internalInit(descriptor.getExtensions().get(10));
-    packageModuleName.internalInit(descriptor.getExtensions().get(11));
-    packageLocalVariable.internalInit(descriptor.getExtensions().get(12));
+    constructorUniqId.internalInit(descriptor.getExtensions().get(1));
+    methodSignature.internalInit(descriptor.getExtensions().get(2));
+    lambdaClassOriginName.internalInit(descriptor.getExtensions().get(3));
+    functionUniqId.internalInit(descriptor.getExtensions().get(4));
+    propertySignature.internalInit(descriptor.getExtensions().get(5));
+    flags.internalInit(descriptor.getExtensions().get(6));
+    propertyUniqId.internalInit(descriptor.getExtensions().get(7));
+    enumEntryUniqId.internalInit(descriptor.getExtensions().get(8));
+    valueParamUniqId.internalInit(descriptor.getExtensions().get(9));
+    typeAnnotation.internalInit(descriptor.getExtensions().get(10));
+    isRaw.internalInit(descriptor.getExtensions().get(11));
+    typeParameterAnnotation.internalInit(descriptor.getExtensions().get(12));
+    typeParamUniqId.internalInit(descriptor.getExtensions().get(13));
+    classModuleName.internalInit(descriptor.getExtensions().get(14));
+    classLocalVariable.internalInit(descriptor.getExtensions().get(15));
+    anonymousObjectOriginName.internalInit(descriptor.getExtensions().get(16));
+    classUniqId.internalInit(descriptor.getExtensions().get(17));
+    packageModuleName.internalInit(descriptor.getExtensions().get(18));
+    packageLocalVariable.internalInit(descriptor.getExtensions().get(19));
     org.jetbrains.kotlin.protobuf.ExtensionRegistry registry =
         org.jetbrains.kotlin.protobuf.ExtensionRegistry.newInstance();
     registry.add(org.jetbrains.kotlin.metadata.DebugExtOptionsProtoBuf.stringIdInTable);

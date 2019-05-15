@@ -253,6 +253,10 @@ class DifferenceCalculatorForClass(
                 ProtoCompareGenerated.ProtoBufClassKind.JVM_EXT_ANONYMOUS_OBJECT_ORIGIN_NAME -> {
                     // Not affected, this extension is not used in the compiler
                 }
+                ProtoBufClassKind.JVM_EXT_CLASS_UNIQ_ID -> {
+                    // When uniqId is affected, this means something else in the class signature has changed.
+                    // Those changes will be caught separately.
+                }
             }
         }
 

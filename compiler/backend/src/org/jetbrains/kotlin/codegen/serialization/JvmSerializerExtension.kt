@@ -39,7 +39,11 @@ import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.org.objectweb.asm.Type
 import org.jetbrains.org.objectweb.asm.commons.Method
 
-class JvmSerializerExtension(private val bindings: JvmSerializationBindings, state: GenerationState) : SerializerExtension() {
+class JvmSerializerExtension(
+    private val bindings: JvmSerializationBindings,
+    state: GenerationState,
+    private val uniqIdProvider: ((DeclarationDescriptor) -> JvmProtoBuf.DescriptorUniqId?) = { null }
+) : SerializerExtension() {
     private val globalBindings = state.globalSerializationBindings
     private val codegenBinding = state.bindingContext
     private val typeMapper = state.typeMapper
@@ -76,6 +80,9 @@ class JvmSerializerExtension(private val bindings: JvmSerializationBindings, sta
     ) {
         if (moduleName != JvmProtoBufUtil.DEFAULT_MODULE_NAME) {
             proto.setExtension(JvmProtoBuf.classModuleName, stringTable.getStringIndex(moduleName))
+        }
+        uniqIdProvider(descriptor)?.let {
+            proto.setExtension(JvmProtoBuf.classUniqId, it)
         }
 
         val containerAsmType =
@@ -165,6 +172,9 @@ class JvmSerializerExtension(private val bindings: JvmSerializationBindings, sta
                 proto.setExtension(JvmProtoBuf.constructorSignature, signature)
             }
         }
+        uniqIdProvider(descriptor)?.let {
+            proto.setExtension(JvmProtoBuf.constructorUniqId, it)
+        }
     }
 
     override fun serializeFunction(
@@ -183,6 +193,10 @@ class JvmSerializerExtension(private val bindings: JvmSerializationBindings, sta
 
         if (descriptor.needsInlineParameterNullCheckRequirement()) {
             versionRequirementTable?.writeInlineParameterNullCheckRequirement(proto::addVersionRequirement)
+        }
+
+        uniqIdProvider(descriptor)?.let {
+            proto.setExtension(JvmProtoBuf.functionUniqId, it)
         }
     }
 
@@ -238,6 +252,10 @@ class JvmSerializerExtension(private val bindings: JvmSerializationBindings, sta
 
         if (getter?.needsInlineParameterNullCheckRequirement() == true || setter?.needsInlineParameterNullCheckRequirement() == true) {
             versionRequirementTable?.writeInlineParameterNullCheckRequirement(proto::addVersionRequirement)
+        }
+
+        uniqIdProvider(descriptor)?.let {
+            proto.setExtension(JvmProtoBuf.propertyUniqId, it)
         }
     }
 

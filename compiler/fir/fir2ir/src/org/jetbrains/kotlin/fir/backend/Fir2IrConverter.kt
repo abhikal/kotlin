@@ -13,10 +13,7 @@ import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.impl.IrModuleFragmentImpl
 import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
-import org.jetbrains.kotlin.ir.util.ConstantValueGenerator
-import org.jetbrains.kotlin.ir.util.ExternalDependenciesGenerator
-import org.jetbrains.kotlin.ir.util.SymbolTable
-import org.jetbrains.kotlin.ir.util.TypeTranslator
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi2ir.PsiSourceManager
 
@@ -55,6 +52,6 @@ object Fir2IrConverter {
         symbolTable: SymbolTable,
         builtIns: IrBuiltIns
     ) {
-        ExternalDependenciesGenerator(irModule.descriptor, symbolTable, builtIns).generateUnboundSymbolsAsDependencies()
+        ExternalDependenciesGenerator(irModule.descriptor, symbolTable, builtIns, deserializer = null).generateUnboundSymbolsAsDependencies()
     }
 }

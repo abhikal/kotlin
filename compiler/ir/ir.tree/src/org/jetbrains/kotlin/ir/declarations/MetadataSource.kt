@@ -11,9 +11,13 @@ import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 
 interface MetadataSource {
-    class Class(val descriptor: ClassDescriptor) : MetadataSource
+    class Class(val descriptor: ClassDescriptor) : MetadataSource {
+        var serializedIr: ByteArray? = null
+    }
 
-    class File(val descriptors: List<DeclarationDescriptor>) : MetadataSource
+    class File(val descriptors: List<DeclarationDescriptor>) : MetadataSource {
+        var serializedIr: ByteArray? = null
+    }
 
     class Function(val descriptor: FunctionDescriptor) : MetadataSource
 

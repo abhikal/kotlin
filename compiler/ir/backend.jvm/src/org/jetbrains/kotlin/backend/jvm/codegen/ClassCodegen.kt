@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.codegen.inline.SourceMapper
 import org.jetbrains.kotlin.codegen.serialization.JvmSerializationBindings
 import org.jetbrains.kotlin.codegen.serialization.JvmSerializerExtension
 import org.jetbrains.kotlin.config.LanguageFeature
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.ir.declarations.*
@@ -25,6 +26,8 @@ import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.load.java.JvmAbi
 import org.jetbrains.kotlin.load.java.JvmAnnotationNames
 import org.jetbrains.kotlin.load.kotlin.header.KotlinClassHeader
+import org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf
+import org.jetbrains.kotlin.metadata.jvm.deserialization.BitEncoding
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.resolve.jvm.AsmTypes
 import org.jetbrains.kotlin.resolve.jvm.annotations.JVM_SYNTHETIC_ANNOTATION_FQ_NAME
@@ -34,6 +37,7 @@ import org.jetbrains.kotlin.resolve.jvm.diagnostics.JvmDeclarationOrigin
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.OtherOrigin
 import org.jetbrains.kotlin.serialization.DescriptorSerializer
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
+import org.jetbrains.org.objectweb.asm.AnnotationVisitor
 import org.jetbrains.org.objectweb.asm.Opcodes
 import org.jetbrains.org.objectweb.asm.Type
 import java.io.File
@@ -66,7 +70,12 @@ open class ClassCodegen protected constructor(
 
     private var sourceMapper: DefaultSourceMapper? = null
 
-    private val serializerExtension = JvmSerializerExtension(visitor.serializationBindings, state)
+    private fun uniqIdProvider(descriptor: DeclarationDescriptor): JvmProtoBuf.DescriptorUniqId? {
+        val index = context.declarationTable.descriptorTable.get(descriptor) ?: return null
+        return JvmProtoBuf.DescriptorUniqId.newBuilder().setIndex(index).build()
+    }
+
+    private val serializerExtension = JvmSerializerExtension(visitor.serializationBindings, state, ::uniqIdProvider)
     private val serializer: DescriptorSerializer? =
         when (val metadata = irClass.metadata) {
             is MetadataSource.Class -> DescriptorSerializer.create(metadata.descriptor, serializerExtension, parentClassCodegen?.serializer)
@@ -143,8 +152,9 @@ open class ClassCodegen protected constructor(
         when (val metadata = irClass.metadata) {
             is MetadataSource.Class -> {
                 val classProto = serializer!!.classProto(metadata.descriptor).build()
-                writeKotlinMetadata(visitor, state, KotlinClassHeader.Kind.CLASS, 0) {
-                    AsmUtil.writeAnnotationData(it, serializer, classProto)
+                writeKotlinMetadata(visitor, state, KotlinClassHeader.Kind.CLASS, 0) { av ->
+                    AsmUtil.writeAnnotationData(av, serializer, classProto)
+                    metadata.serializedIr?.let { storeSerializedIr(av, it) }
                 }
             }
             is MetadataSource.File -> {
@@ -157,6 +167,8 @@ open class ClassCodegen protected constructor(
                 val kind = if (facadeClassName != null) KotlinClassHeader.Kind.MULTIFILE_CLASS_PART else KotlinClassHeader.Kind.FILE_FACADE
                 writeKotlinMetadata(visitor, state, kind, 0) { av ->
                     AsmUtil.writeAnnotationData(av, serializer, packageProto.build())
+                    val serializedIr = metadata.serializedIr ?: error("File facade should have serialized IR")
+                    storeSerializedIr(av, serializedIr)
 
                     if (facadeClassName != null) {
                         av.visit(JvmAnnotationNames.METADATA_MULTIFILE_CLASS_NAME_FIELD_NAME, facadeClassName.internalName)
@@ -405,4 +417,14 @@ private fun IrClass.getSuperClassInfo(typeMapper: IrTypeMapper): IrSuperClassInf
     }
 
     return IrSuperClassInfo(AsmTypes.OBJECT_TYPE, null)
+}
+
+
+private fun storeSerializedIr(av: AnnotationVisitor, serializedIr: ByteArray) {
+    val serializedIrParts = BitEncoding.encodeBytes(serializedIr)
+    val partsVisitor = av.visitArray(JvmAnnotationNames.METADATA_SERIALIZED_IR_FIELD_NAME)
+    for (part in serializedIrParts) {
+        partsVisitor.visit(null, part)
+    }
+    partsVisitor.visitEnd()
 }
