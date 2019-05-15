@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.symbols.IrBindableSymbol
 import org.jetbrains.kotlin.ir.util.isReal
 import org.jetbrains.kotlin.ir.util.original
+import org.jetbrains.kotlin.ir.util.resolveFakeOverride
 
 // We may get several real supers here (e.g. see the code snippet from KT-33034).
 // TODO: Consider reworking the resolution algorithm to get a determined super declaration.
@@ -74,7 +75,8 @@ fun IrSimpleFunction.resolveFakeOverride(allowAbstract: Boolean = false): IrSimp
 internal fun IrSimpleFunction.resolveFakeOverrideMaybeAbstract() = this.resolveFakeOverride(allowAbstract = true)
 
 internal fun IrProperty.resolveFakeOverrideMaybeAbstract(): IrProperty =
-    this.getter!!.resolveFakeOverrideMaybeAbstract().correspondingPropertySymbol!!.owner
+    this.getter!!.resolveFakeOverrideMaybeAbstract().correspondingPropertySymbol?.owner ?:
+    this.backingField!!.resolveFakeOverride()!!.correspondingPropertySymbol!!.owner
 
 /**
  * TODO: This method can be simplified if the "overriddenSymbols" list of an IrField always includes only one element.
@@ -86,7 +88,7 @@ internal fun IrProperty.resolveFakeOverrideMaybeAbstract(): IrProperty =
 internal fun IrField.resolveFakeOverride(): IrField = getRealSupers().first()
 
 val IrSimpleFunction.target: IrSimpleFunction
-    get() = (if (modality == Modality.ABSTRACT) this else resolveFakeOverride()).original
+    get() = (if (modality == Modality.ABSTRACT) this else resolveFakeOverride(allowAbstract = false)).original
 
 val IrFunction.target: IrFunction get() = when (this) {
     is IrSimpleFunction -> this.target

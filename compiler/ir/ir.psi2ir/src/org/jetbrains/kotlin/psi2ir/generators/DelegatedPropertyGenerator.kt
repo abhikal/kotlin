@@ -33,6 +33,8 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.symbols.IrVariableSymbol
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.declareSimpleFunctionWithOverrides
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtProperty
@@ -68,20 +70,22 @@ class DelegatedPropertyGenerator(declarationGenerator: DeclarationGenerator) : D
         val delegateReceiverValue = createBackingFieldValueForDelegate(irDelegate.symbol, thisClass, ktDelegate)
         val getterDescriptor = propertyDescriptor.getter!!
         irProperty.getter = generateDelegatedPropertyAccessor(ktProperty, ktDelegate, getterDescriptor) { irGetter ->
+            val typeArguments = irGetter.typeParameters.map { it.defaultType }
             generateDelegatedPropertyGetterBody(
                 irGetter,
                 ktDelegate, getterDescriptor, delegateReceiverValue,
-                createCallableReference(ktDelegate, kPropertyType, propertyDescriptor, irGetter.symbol)
+                createCallableReference(ktDelegate, kPropertyType, propertyDescriptor, irGetter.symbol, typeArguments)
             )
         }
 
         if (propertyDescriptor.isVar) {
             val setterDescriptor = propertyDescriptor.setter!!
             irProperty.setter = generateDelegatedPropertyAccessor(ktProperty, ktDelegate, setterDescriptor) { irSetter ->
+                val typeArguments = irSetter.typeParameters.map { it.defaultType }
                 generateDelegatedPropertySetterBody(
                     irSetter,
                     ktDelegate, setterDescriptor, delegateReceiverValue,
-                    createCallableReference(ktDelegate, kPropertyType, propertyDescriptor, irSetter.symbol)
+                    createCallableReference(ktDelegate, kPropertyType, propertyDescriptor, irSetter.symbol, typeArguments)
                 )
             }
         }
@@ -156,7 +160,8 @@ class DelegatedPropertyGenerator(declarationGenerator: DeclarationGenerator) : D
         val statementGenerator = createBodyGenerator(scopeOwner).createStatementGenerator()
         val provideDelegateCall = statementGenerator.pregenerateCall(provideDelegateResolvedCall)
         provideDelegateCall.setExplicitReceiverValue(OnceExpressionValue(irDelegateInitializer.expression))
-        provideDelegateCall.irValueArgumentsByIndex[1] = createCallableReference(ktDelegate, kPropertyType, property, scopeOwner)
+        provideDelegateCall.irValueArgumentsByIndex[1] =
+            createCallableReference(ktDelegate, kPropertyType, property, scopeOwner, emptyList())
         val irProvideDelegate = CallGenerator(statementGenerator).generateCall(
             ktDelegate.startOffsetSkippingComments, ktDelegate.endOffset, provideDelegateCall
         )
@@ -207,12 +212,17 @@ class DelegatedPropertyGenerator(declarationGenerator: DeclarationGenerator) : D
         ktElement: KtElement,
         type: KotlinType,
         referencedDescriptor: VariableDescriptorWithAccessors,
-        scopeOwner: IrSymbol
+        scopeOwner: IrSymbol,
+        typeArguments: List<IrType>
     ): IrCallableReference =
         createCallableReference(
             ktElement, type, referencedDescriptor,
             createBodyGenerator(scopeOwner).createStatementGenerator()
-        )
+        ).apply {
+            typeArguments.forEachIndexed { i, typeArgument ->
+                putTypeArgument(i, typeArgument)
+            }
+        }
 
     private fun createLocalDelegatedPropertyReference(
         ktElement: KtElement,
