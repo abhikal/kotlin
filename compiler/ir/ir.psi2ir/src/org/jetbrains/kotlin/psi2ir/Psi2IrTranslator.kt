@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.util.EmptyDeserializer
 import org.jetbrains.kotlin.ir.util.IrDeserializer
 import org.jetbrains.kotlin.ir.util.IrProvider
 import org.jetbrains.kotlin.ir.util.SymbolTable
@@ -72,7 +73,7 @@ class Psi2IrTranslator(
     fun generateModuleFragment(
         context: GeneratorContext,
         ktFiles: Collection<KtFile>,
-        deserializer: IrDeserializer? = null,
+        deserializer: IrDeserializer = EmptyDeserializer,
         irProviders: List<IrProvider> = emptyList()
     ): IrModuleFragment {
         val moduleGenerator = ModuleGenerator(context)

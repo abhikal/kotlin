@@ -11,8 +11,8 @@ import org.jetbrains.kotlin.builtins.functions.FunctionClassDescriptor
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationParent
-import org.jetbrains.kotlin.ir.util.DeclarationStubGenerator
-import org.jetbrains.kotlin.ir.util.SymbolTable
+import org.jetbrains.kotlin.ir.symbols.IrSymbol
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassConstructorDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaMethodDescriptor
@@ -23,7 +23,7 @@ import org.jetbrains.kotlin.serialization.deserialization.descriptors.Deserializ
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedPropertyDescriptor
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedSimpleFunctionDescriptor
 
-class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, private val stubGenerator: DeclarationStubGenerator) : DescriptorUniqIdAware {
+class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val backoff: (IrSymbol) -> IrDeclaration) : DescriptorUniqIdAware {
     override fun DeclarationDescriptor.getUniqId(): Long? =
         when (this) {
             is DeserializedClassDescriptor -> this.classProto.tryGetExtension(JvmProtoBuf.classUniqId)?.index
@@ -40,7 +40,6 @@ class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, private val stubGen
             is JavaPropertyDescriptor,
             is FunctionClassDescriptor -> referenceAndHash(this)
             else -> null
-//                referenceAndHash(this)
         }
 
     private fun referenceAndHash(descriptor: DeclarationDescriptor): Long? =
@@ -53,16 +52,16 @@ class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, private val stubGen
 
     private fun referenceWithParents(descriptor: DeclarationDescriptor): IrDeclaration {
         val original = descriptor.original
-        val result = stubGenerator.generateMemberStub(original)
+        val result = referenceOrDeclare(original)
         var currentDescriptor = original
         var current = result
         while (true) {
             val nextDescriptor = currentDescriptor.containingDeclaration!!
             if (nextDescriptor is PackageFragmentDescriptor) {
-                current.parent = stubGenerator.generateOrGetEmptyExternalPackageFragmentStub(nextDescriptor)
+                current.parent = symbolTable.findOrDeclareExternalPackageFragment(nextDescriptor)
                 break
             } else {
-                val next = stubGenerator.generateMemberStub(nextDescriptor)
+                val next = referenceOrDeclare(nextDescriptor)
                 current.parent = next as IrDeclarationParent
                 currentDescriptor = nextDescriptor
                 current = next
@@ -70,6 +69,13 @@ class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, private val stubGen
         }
         return result
     }
+
+    private fun referenceOrDeclare(descriptor: DeclarationDescriptor): IrDeclaration =
+        symbolTable.referenceMember(descriptor).also {
+            if (!it.isBound) {
+                backoff(it)
+            }
+        }.owner as IrDeclaration
 }
 
 fun newJvmDescriptorUniqId(index: Long): JvmProtoBuf.DescriptorUniqId =

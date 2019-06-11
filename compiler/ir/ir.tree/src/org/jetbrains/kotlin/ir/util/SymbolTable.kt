@@ -30,13 +30,11 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.impl.IrUninitializedType
 
 interface IrProvider {
-    fun getDeclaration(symbol: IrSymbol): IrDeclaration?
+    fun getDeclaration(symbol: IrSymbol, backoff: (IrSymbol) -> IrDeclaration): IrDeclaration
 }
 
 interface IrDeserializer : IrProvider {
     fun declareForwardDeclarations()
-
-    var successfullyInvokedLately: Boolean
 }
 
 interface ReferenceSymbolTable {

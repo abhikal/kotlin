@@ -128,6 +128,11 @@ public class CompileKotlinAgainstKotlinTestGenerated extends AbstractCompileKotl
         runTest("compiler/testData/compileKotlinAgainstKotlin/enum.kt");
     }
 
+    @TestMetadata("fakeOverrideInLocalClass.kt")
+    public void testFakeOverrideInLocalClass() throws Exception {
+        runTest("compiler/testData/compileKotlinAgainstKotlin/fakeOverrideInLocalClass.kt");
+    }
+
     @TestMetadata("inlineClassFromBinaryDependencies.kt")
     public void testInlineClassFromBinaryDependencies() throws Exception {
         runTest("compiler/testData/compileKotlinAgainstKotlin/inlineClassFromBinaryDependencies.kt");

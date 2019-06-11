@@ -48,7 +48,7 @@ class ModuleGenerator(override val context: GeneratorContext) : Generator {
 
     fun generateUnboundSymbolsAsDependencies(
         irModule: IrModuleFragment,
-        deserializer: IrDeserializer?,
+        deserializer: IrDeserializer,
         irProviders: List<IrProvider> = emptyList(),
         facadeClassGenerator: (DeserializedContainerSource) -> IrClass? = { null }
     ) {
