@@ -621,6 +621,8 @@ fun SymbolTable.referenceMember(descriptor: DeclarationDescriptor): IrSymbol = w
         referenceSimpleFunction(descriptor)
     is PropertyDescriptor ->
         referenceProperty(descriptor)
+    is TypeParameterDescriptor ->
+        referenceTypeParameter(descriptor)
     else ->
         throw AssertionError("Unexpected member descriptor: $descriptor")
 }

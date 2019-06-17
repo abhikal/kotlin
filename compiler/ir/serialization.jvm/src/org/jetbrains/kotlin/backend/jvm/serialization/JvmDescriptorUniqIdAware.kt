@@ -18,10 +18,7 @@ import org.jetbrains.kotlin.load.java.descriptors.JavaClassDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaMethodDescriptor
 import org.jetbrains.kotlin.load.java.descriptors.JavaPropertyDescriptor
 import org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedClassConstructorDescriptor
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedClassDescriptor
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedPropertyDescriptor
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedSimpleFunctionDescriptor
+import org.jetbrains.kotlin.serialization.deserialization.descriptors.*
 
 class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val backoff: (IrSymbol) -> IrDeclaration) : DescriptorUniqIdAware {
     override fun DeclarationDescriptor.getUniqId(): Long? =
@@ -33,6 +30,8 @@ class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val backoff: (IrSym
             is DeserializedPropertyDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.propertyUniqId)?.index
                 ?: referenceAndHash(this)
             is DeserializedClassConstructorDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.constructorUniqId)?.index
+                ?: referenceAndHash(this)
+            is DeserializedTypeParameterDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.typeParamUniqId)?.index
                 ?: referenceAndHash(this)
             is JavaClassDescriptor,
             is JavaClassConstructorDescriptor,
