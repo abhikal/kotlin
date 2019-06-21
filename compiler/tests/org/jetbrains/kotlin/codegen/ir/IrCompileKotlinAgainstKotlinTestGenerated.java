@@ -268,6 +268,11 @@ public class IrCompileKotlinAgainstKotlinTestGenerated extends AbstractIrCompile
         runTest("compiler/testData/compileKotlinAgainstKotlin/platformTypes.kt");
     }
 
+    @TestMetadata("propertyFakeOverride.kt")
+    public void testPropertyFakeOverride() throws Exception {
+        runTest("compiler/testData/compileKotlinAgainstKotlin/propertyFakeOverride.kt");
+    }
+
     @TestMetadata("propertyReference.kt")
     public void testPropertyReference() throws Exception {
         runTest("compiler/testData/compileKotlinAgainstKotlin/propertyReference.kt");

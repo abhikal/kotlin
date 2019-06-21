@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.backend.common.descriptors.*
 import org.jetbrains.kotlin.backend.common.serialization.*
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.*
-import org.jetbrains.kotlin.ir.declarations.IrDeclaration
+import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
 import org.jetbrains.kotlin.ir.expressions.impl.IrLoopBase
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrVariableSymbolImpl
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.load.java.JavaVisibilities
 import org.jetbrains.kotlin.load.kotlin.JvmPackagePartSource
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement
 import org.jetbrains.kotlin.name.FqName
@@ -31,6 +32,7 @@ import org.jetbrains.kotlin.backend.common.serialization.proto.IrSymbolData as P
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrSymbolKind as ProtoSymbolKind
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrTypeIndex as ProtoTypeIndex
 import org.jetbrains.kotlin.backend.common.serialization.proto.String as ProtoString
+import org.jetbrains.kotlin.backend.common.serialization.proto.Visibility as ProtoVisibility
 
 class JvmIrDeserializer(
     val module: ModuleDescriptor,
@@ -220,5 +222,13 @@ class JvmIrDeserializer(
 
         override fun deserializeLoopHeader(loopIndex: Int, loopBuilder: () -> IrLoopBase) =
             moduleLoops.getOrPut(loopIndex, loopBuilder)
+
+        override fun deserializeVisibility(value: ProtoVisibility): Visibility = when (deserializeString(value.name)) {
+            "package" -> JavaVisibilities.PACKAGE_VISIBILITY
+            "protected_static" -> JavaVisibilities.PROTECTED_STATIC_VISIBILITY
+            "protected_and_package" -> JavaVisibilities.PROTECTED_AND_PACKAGE
+            else -> super.deserializeVisibility(value)
+        }
+
     }
 }

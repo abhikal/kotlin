@@ -1147,8 +1147,9 @@ open class IrModuleSerializer(
         val proto = ProtoDeclarationContainer.newBuilder()
         declarations.forEach {
             //if (it is IrDeclarationWithVisibility && it.visibility == Visibilities.INVISIBLE_FAKE) return@forEach
-            if (externallyVisibleOnly && it is IrDeclarationWithVisibility && isPrivate(it.visibility))
+            if (externallyVisibleOnly && it is IrDeclarationWithVisibility && isPrivate(it.visibility)) {
                 return@forEach
+            }
             proto.addDeclaration(serializeDeclaration(it))
         }
         return proto.build()
