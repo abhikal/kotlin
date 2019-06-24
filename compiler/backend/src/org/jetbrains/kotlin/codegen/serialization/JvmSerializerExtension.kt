@@ -42,7 +42,7 @@ import org.jetbrains.org.objectweb.asm.commons.Method
 class JvmSerializerExtension(
     private val bindings: JvmSerializationBindings,
     state: GenerationState,
-    private val uniqIdProvider: ((DeclarationDescriptor) -> JvmProtoBuf.DescriptorUniqId?) = { null }
+    private val uniqIdProvider: ((DeclarationDescriptor) -> Long?) = { null }
 ) : SerializerExtension() {
     private val globalBindings = state.globalSerializationBindings
     private val codegenBinding = state.bindingContext

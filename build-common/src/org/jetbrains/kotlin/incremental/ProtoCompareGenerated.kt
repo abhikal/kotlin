@@ -205,7 +205,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.classUniqId) != new.hasExtension(JvmProtoBuf.classUniqId)) return false
         if (old.hasExtension(JvmProtoBuf.classUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.classUniqId), new.getExtension(JvmProtoBuf.classUniqId))) return false
+            if (old.getExtension(JvmProtoBuf.classUniqId) != new.getExtension(JvmProtoBuf.classUniqId)) return false
         }
 
         if (old.getExtensionCount(JsProtoBuf.classAnnotation) != new.getExtensionCount(JsProtoBuf.classAnnotation)) {
@@ -333,7 +333,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.classUniqId) != new.hasExtension(JvmProtoBuf.classUniqId)) result.add(ProtoBufClassKind.JVM_EXT_CLASS_UNIQ_ID)
         if (old.hasExtension(JvmProtoBuf.classUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.classUniqId), new.getExtension(JvmProtoBuf.classUniqId))) result.add(ProtoBufClassKind.JVM_EXT_CLASS_UNIQ_ID)
+            if (old.getExtension(JvmProtoBuf.classUniqId) != new.getExtension(JvmProtoBuf.classUniqId)) result.add(ProtoBufClassKind.JVM_EXT_CLASS_UNIQ_ID)
         }
 
         if (old.getExtensionCount(JsProtoBuf.classAnnotation) != new.getExtensionCount(JsProtoBuf.classAnnotation)) {
@@ -428,7 +428,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.functionUniqId) != new.hasExtension(JvmProtoBuf.functionUniqId)) return false
         if (old.hasExtension(JvmProtoBuf.functionUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.functionUniqId), new.getExtension(JvmProtoBuf.functionUniqId))) return false
+            if (old.getExtension(JvmProtoBuf.functionUniqId) != new.getExtension(JvmProtoBuf.functionUniqId)) return false
         }
 
         if (old.getExtensionCount(JsProtoBuf.functionAnnotation) != new.getExtensionCount(JsProtoBuf.functionAnnotation)) {
@@ -531,7 +531,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.propertyUniqId) != new.hasExtension(JvmProtoBuf.propertyUniqId)) return false
         if (old.hasExtension(JvmProtoBuf.propertyUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.propertyUniqId), new.getExtension(JvmProtoBuf.propertyUniqId))) return false
+            if (old.getExtension(JvmProtoBuf.propertyUniqId) != new.getExtension(JvmProtoBuf.propertyUniqId)) return false
         }
 
         if (old.getExtensionCount(JsProtoBuf.propertyAnnotation) != new.getExtensionCount(JsProtoBuf.propertyAnnotation)) {
@@ -700,7 +700,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.typeParamUniqId) != new.hasExtension(JvmProtoBuf.typeParamUniqId)) return false
         if (old.hasExtension(JvmProtoBuf.typeParamUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.typeParamUniqId), new.getExtension(JvmProtoBuf.typeParamUniqId))) return false
+            if (old.getExtension(JvmProtoBuf.typeParamUniqId) != new.getExtension(JvmProtoBuf.typeParamUniqId)) return false
         }
 
         if (old.getExtensionCount(JsProtoBuf.typeParameterAnnotation) != new.getExtensionCount(JsProtoBuf.typeParameterAnnotation)) {
@@ -844,7 +844,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.constructorUniqId) != new.hasExtension(JvmProtoBuf.constructorUniqId)) return false
         if (old.hasExtension(JvmProtoBuf.constructorUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.constructorUniqId), new.getExtension(JvmProtoBuf.constructorUniqId))) return false
+            if (old.getExtension(JvmProtoBuf.constructorUniqId) != new.getExtension(JvmProtoBuf.constructorUniqId)) return false
         }
 
         if (old.getExtensionCount(JsProtoBuf.constructorAnnotation) != new.getExtensionCount(JsProtoBuf.constructorAnnotation)) {
@@ -881,7 +881,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.enumEntryUniqId) != new.hasExtension(JvmProtoBuf.enumEntryUniqId)) return false
         if (old.hasExtension(JvmProtoBuf.enumEntryUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.enumEntryUniqId), new.getExtension(JvmProtoBuf.enumEntryUniqId))) return false
+            if (old.getExtension(JvmProtoBuf.enumEntryUniqId) != new.getExtension(JvmProtoBuf.enumEntryUniqId)) return false
         }
 
         if (old.getExtensionCount(JsProtoBuf.enumEntryAnnotation) != new.getExtensionCount(JsProtoBuf.enumEntryAnnotation)) {
@@ -901,12 +901,6 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
                 if (!checkEquals(old.getExtension(BuiltInsProtoBuf.enumEntryAnnotation, i), new.getExtension(BuiltInsProtoBuf.enumEntryAnnotation, i))) return false
             }
         }
-
-        return true
-    }
-
-    open fun checkEquals(old: JvmProtoBuf.DescriptorUniqId, new: JvmProtoBuf.DescriptorUniqId): Boolean {
-        if (old.index != new.index) return false
 
         return true
     }
@@ -949,7 +943,7 @@ open class ProtoCompareGenerated(val oldNameResolver: NameResolver, val newNameR
 
         if (old.hasExtension(JvmProtoBuf.valueParamUniqId) != new.hasExtension(JvmProtoBuf.valueParamUniqId)) return false
         if (old.hasExtension(JvmProtoBuf.valueParamUniqId)) {
-            if (!checkEquals(old.getExtension(JvmProtoBuf.valueParamUniqId), new.getExtension(JvmProtoBuf.valueParamUniqId))) return false
+            if (old.getExtension(JvmProtoBuf.valueParamUniqId) != new.getExtension(JvmProtoBuf.valueParamUniqId)) return false
         }
 
         if (old.getExtensionCount(JsProtoBuf.parameterAnnotation) != new.getExtensionCount(JsProtoBuf.parameterAnnotation)) {
@@ -1703,7 +1697,7 @@ fun ProtoBuf.Class.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: (Int) ->
     }
 
     if (hasExtension(JvmProtoBuf.classUniqId)) {
-        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.classUniqId).hashCode(stringIndexes, fqNameIndexes)
+        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.classUniqId).hashCode()
     }
 
     for(i in 0..getExtensionCount(JsProtoBuf.classAnnotation) - 1) {
@@ -1783,7 +1777,7 @@ fun ProtoBuf.Function.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: (Int)
     }
 
     if (hasExtension(JvmProtoBuf.functionUniqId)) {
-        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.functionUniqId).hashCode(stringIndexes, fqNameIndexes)
+        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.functionUniqId).hashCode()
     }
 
     for(i in 0..getExtensionCount(JsProtoBuf.functionAnnotation) - 1) {
@@ -1867,7 +1861,7 @@ fun ProtoBuf.Property.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: (Int)
     }
 
     if (hasExtension(JvmProtoBuf.propertyUniqId)) {
-        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.propertyUniqId).hashCode(stringIndexes, fqNameIndexes)
+        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.propertyUniqId).hashCode()
     }
 
     for(i in 0..getExtensionCount(JsProtoBuf.propertyAnnotation) - 1) {
@@ -2009,7 +2003,7 @@ fun ProtoBuf.TypeParameter.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: 
     }
 
     if (hasExtension(JvmProtoBuf.typeParamUniqId)) {
-        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.typeParamUniqId).hashCode(stringIndexes, fqNameIndexes)
+        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.typeParamUniqId).hashCode()
     }
 
     for(i in 0..getExtensionCount(JsProtoBuf.typeParameterAnnotation) - 1) {
@@ -2121,7 +2115,7 @@ fun ProtoBuf.Constructor.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: (I
     }
 
     if (hasExtension(JvmProtoBuf.constructorUniqId)) {
-        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.constructorUniqId).hashCode(stringIndexes, fqNameIndexes)
+        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.constructorUniqId).hashCode()
     }
 
     for(i in 0..getExtensionCount(JsProtoBuf.constructorAnnotation) - 1) {
@@ -2147,7 +2141,7 @@ fun ProtoBuf.EnumEntry.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: (Int
     }
 
     if (hasExtension(JvmProtoBuf.enumEntryUniqId)) {
-        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.enumEntryUniqId).hashCode(stringIndexes, fqNameIndexes)
+        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.enumEntryUniqId).hashCode()
     }
 
     for(i in 0..getExtensionCount(JsProtoBuf.enumEntryAnnotation) - 1) {
@@ -2157,14 +2151,6 @@ fun ProtoBuf.EnumEntry.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: (Int
     for(i in 0..getExtensionCount(BuiltInsProtoBuf.enumEntryAnnotation) - 1) {
         hashCode = 31 * hashCode + getExtension(BuiltInsProtoBuf.enumEntryAnnotation, i).hashCode(stringIndexes, fqNameIndexes)
     }
-
-    return hashCode
-}
-
-fun JvmProtoBuf.DescriptorUniqId.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes: (Int) -> Int): Int {
-    var hashCode = 1
-
-    hashCode = 31 * hashCode + index.hashCode()
 
     return hashCode
 }
@@ -2207,7 +2193,7 @@ fun ProtoBuf.ValueParameter.hashCode(stringIndexes: (Int) -> Int, fqNameIndexes:
     }
 
     if (hasExtension(JvmProtoBuf.valueParamUniqId)) {
-        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.valueParamUniqId).hashCode(stringIndexes, fqNameIndexes)
+        hashCode = 31 * hashCode + getExtension(JvmProtoBuf.valueParamUniqId).hashCode()
     }
 
     for(i in 0..getExtensionCount(JsProtoBuf.parameterAnnotation) - 1) {

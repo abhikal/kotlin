@@ -88,14 +88,10 @@ message JvmPropertySignature {
   optional JvmMethodSignature setter = 4;
 }
 
-message DescriptorUniqId {
-  required int64 index = 1;
-}
-
 extend Constructor {
   optional JvmMethodSignature constructor_signature = 100;
 
-  optional DescriptorUniqId constructor_uniq_id = 101;
+  optional int64 constructor_uniq_id = 101;
 }
 
 extend Function {
@@ -105,7 +101,7 @@ extend Function {
   // lambda class this class is copied from
   optional int32 lambda_class_origin_name = 101 [(string_id_in_table) = true];
 
-  optional DescriptorUniqId function_uniq_id = 102;
+  optional int64 function_uniq_id = 102;
 }
 
 extend Property {
@@ -116,15 +112,15 @@ extend Property {
    */
   optional int32 flags = 101 [default = 0];
 
-  optional DescriptorUniqId property_uniq_id = 102;
+  optional int64 property_uniq_id = 102;
 }
 
 extend EnumEntry {
-  optional DescriptorUniqId enum_entry_uniq_id = 100;
+  optional int64 enum_entry_uniq_id = 100;
 }
 
 extend ValueParameter {
-  optional DescriptorUniqId value_param_uniq_id = 100;
+  optional int64 value_param_uniq_id = 100;
 }
 
 extend Type {
@@ -135,7 +131,7 @@ extend Type {
 extend TypeParameter {
   repeated Annotation type_parameter_annotation = 100;
 
-  optional DescriptorUniqId type_param_uniq_id = 101;
+  optional int64 type_param_uniq_id = 101;
 }
 
 extend Class {
@@ -148,7 +144,7 @@ extend Class {
   // anonymous object this class is copied from
   optional int32 anonymous_object_origin_name = 103 [(string_id_in_table) = true];
 
-  optional DescriptorUniqId class_uniq_id = 104;
+  optional int64 class_uniq_id = 104;
 }
 
 extend Package {

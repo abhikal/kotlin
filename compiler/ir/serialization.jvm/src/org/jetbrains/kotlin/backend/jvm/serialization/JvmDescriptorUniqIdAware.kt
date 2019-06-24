@@ -20,18 +20,18 @@ import org.jetbrains.kotlin.load.java.descriptors.JavaPropertyDescriptor
 import org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.*
 
-class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val backoff: (IrSymbol) -> IrDeclaration) : DescriptorUniqIdAware {
+class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val fallback: (IrSymbol) -> IrDeclaration) : DescriptorUniqIdAware {
     override fun DeclarationDescriptor.getUniqId(): Long? =
         when (this) {
-            is DeserializedClassDescriptor -> this.classProto.tryGetExtension(JvmProtoBuf.classUniqId)?.index
+            is DeserializedClassDescriptor -> this.classProto.tryGetExtension(JvmProtoBuf.classUniqId)
                 ?: referenceAndHash(this)
-            is DeserializedSimpleFunctionDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.functionUniqId)?.index
+            is DeserializedSimpleFunctionDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.functionUniqId)
                 ?: referenceAndHash(this)
-            is DeserializedPropertyDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.propertyUniqId)?.index
+            is DeserializedPropertyDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.propertyUniqId)
                 ?: referenceAndHash(this)
-            is DeserializedClassConstructorDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.constructorUniqId)?.index
+            is DeserializedClassConstructorDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.constructorUniqId)
                 ?: referenceAndHash(this)
-            is DeserializedTypeParameterDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.typeParamUniqId)?.index
+            is DeserializedTypeParameterDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.typeParamUniqId)
                 ?: referenceAndHash(this)
             is JavaClassDescriptor,
             is JavaClassConstructorDescriptor,
@@ -72,13 +72,10 @@ class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val backoff: (IrSym
     private fun referenceOrDeclare(descriptor: DeclarationDescriptor): IrDeclaration =
         symbolTable.referenceMember(descriptor).also {
             if (!it.isBound) {
-                backoff(it)
+                fallback(it)
             }
         }.owner as IrDeclaration
 }
-
-fun newJvmDescriptorUniqId(index: Long): JvmProtoBuf.DescriptorUniqId =
-    JvmProtoBuf.DescriptorUniqId.newBuilder().setIndex(index).build()
 
 // May be needed in the future
 //
