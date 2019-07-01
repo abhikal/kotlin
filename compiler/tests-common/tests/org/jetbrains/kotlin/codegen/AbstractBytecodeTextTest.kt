@@ -93,6 +93,9 @@ abstract class AbstractBytecodeTextTest : CodegenTestCase() {
             return kotlinFiles > 1
         }
 
+        private val SERIALIZED_IR_FIELD_REGEX = Regex(""", si=\{".*?[^\\]"\}""")
+
+
         fun checkGeneratedTextAgainstExpectedOccurrences(
             text: String,
             expectedOccurrences: List<OccurrenceInfo>,
@@ -102,6 +105,10 @@ abstract class AbstractBytecodeTextTest : CodegenTestCase() {
             val expected = StringBuilder()
             val actual = StringBuilder()
             var lastBackend = TargetBackend.ANY
+
+            /* Remove serialized IR metadata */
+            val sanitizedText = SERIALIZED_IR_FIELD_REGEX.replace(text, "")
+
             for (info in expectedOccurrences) {
                 if (lastBackend != info.backend) {
                     when (info.backend) {
@@ -117,7 +124,7 @@ abstract class AbstractBytecodeTextTest : CodegenTestCase() {
 
                 expected.append(info).append("\n")
                 if (info.backend == TargetBackend.ANY || info.backend == currentBackend) {
-                    actual.append(info.getActualOccurrence(text)).append("\n")
+                    actual.append(info.getActualOccurrence(sanitizedText)).append("\n")
                 } else {
                     actual.append(info).append("\n")
                 }
