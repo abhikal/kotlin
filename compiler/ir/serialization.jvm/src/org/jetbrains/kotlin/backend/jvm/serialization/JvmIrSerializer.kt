@@ -43,7 +43,8 @@ class JvmIrSerializer(
                 idCollector.collectUniqIds(declaration)
             }
         }
-        proto.auxTables = serializeAuxTables(idCollector.map)
+        // TODO -- serialize referencesToTopLevelMap
+        proto.auxTables = serializeAuxTables(idCollector.map, collectExternalReferences(irFile))
 
         return proto.build()
     }
@@ -56,12 +57,13 @@ class JvmIrSerializer(
             .apply { collectUniqIds(irClass) }
             .map
 
-        proto.auxTables = serializeAuxTables(idMap)
+        // TODO -- serialize referencesToTopLevelMap
+        proto.auxTables = serializeAuxTables(idMap, collectExternalReferences(irClass))
 
         return proto.build()
     }
 
-    private fun serializeAuxTables(idMap: Map<Long, FqName>): JvmIr.AuxTables {
+    private fun serializeAuxTables(idMap: Map<Long, FqName>, copiedExternalReferences: ExternalReferencesInfo): JvmIr.AuxTables {
         val proto = JvmIr.AuxTables.newBuilder()
         proto.uniqIdTable = JvmIr.UniqIdTable.newBuilder() // This should come before serializing stringTable.
             .addAllInfos(idMap.toList().map { (id, fqName) ->
@@ -71,6 +73,7 @@ class JvmIrSerializer(
                     .build()
             })
             .build()
+        proto.externalRefs = serializeExternalReferences(copiedExternalReferences)
         proto.symbolTable = ProtoSymbolTable.newBuilder()
             .addAllSymbols(protoSymbolArray)
             .build()
@@ -80,6 +83,29 @@ class JvmIrSerializer(
         proto.stringTable = ProtoStringTable.newBuilder()
             .addAllStrings(protoStringArray)
             .build()
+        return proto.build()
+    }
+
+    private fun serializeExternalReferences(externalReferencesInfo: ExternalReferencesInfo): JvmIr.ExternalRefs {
+        val proto = JvmIr.ExternalRefs.newBuilder()
+        externalReferencesInfo.packageFragments.forEach { packageFragment ->
+            proto.addPackages(
+                JvmIr.JvmExternalPackage.newBuilder()
+                    .setFqName(packageFragment.fqName.asString())
+                    .setDeclarationContainer(
+                        serializeIrDeclarationContainer(packageFragment.declarations)
+                    )
+                    .build()
+            )
+        }
+        for ((reference, extPackageIndex) in externalReferencesInfo.references) {
+            proto.addReferences(
+                JvmIr.ExternalReference.newBuilder()
+                    .setId(reference.uniqId)
+                    .setIndex(extPackageIndex)
+                    .build()
+            )
+        }
         return proto.build()
     }
 
@@ -103,13 +129,12 @@ class JvmIrSerializer(
         private fun handleReference(target: IrDeclaration) {
             val targetToplevelFqName = target.getToplevelFqName()
             if (targetToplevelFqName != ourToplevelFqName) {
-                val uniqId = with(JvmMangler) {
-                    target.hashedMangle
-                }
-                map[uniqId] = targetToplevelFqName
+                map[target.uniqId] = targetToplevelFqName
             }
         }
     }
+
+    private val IrDeclaration.uniqId get() = with(JvmMangler) { hashedMangle }
 
     private tailrec fun IrDeclaration.getToplevelFqName(): FqName =
         when {

@@ -22,11 +22,12 @@ import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
 import org.jetbrains.kotlin.ir.declarations.lazy.*
-import org.jetbrains.kotlin.ir.expressions.impl.IrErrorExpressionImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrExpressionBodyImpl
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.symbols.IrTypeParameterSymbol
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DescriptorWithContainerSource
@@ -201,12 +202,7 @@ class DeclarationStubGenerator(
         ).also { irValueParameter ->
             if (descriptor.declaresDefaultValue()) {
                 irValueParameter.defaultValue =
-                    IrExpressionBodyImpl(
-                        IrErrorExpressionImpl(
-                            UNDEFINED_OFFSET, UNDEFINED_OFFSET, descriptor.type.toIrType(),
-                            "Stub expression for default value of ${descriptor.name}"
-                        )
-                    )
+                    IrExpressionBodyImpl(nullConst(descriptor.type.toIrType()))
             }
         }
     }
@@ -268,5 +264,17 @@ class DeclarationStubGenerator(
                 this, typeTranslator
             )
         }
+    }
+
+    private fun nullConst(type: IrType) = when {
+        type.isFloat() -> IrConstImpl.float(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, 0.0F)
+        type.isDouble() -> IrConstImpl.double(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, 0.0)
+        type.isBoolean() -> IrConstImpl.boolean(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, false)
+        type.isByte() -> IrConstImpl.byte(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, 0)
+        type.isChar() -> IrConstImpl.char(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, 0.toChar())
+        type.isShort() -> IrConstImpl.short(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, 0)
+        type.isInt() -> IrConstImpl.int(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, 0)
+        type.isLong() -> IrConstImpl.long(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type, 0)
+        else -> IrConstImpl.constNull(UNDEFINED_OFFSET, UNDEFINED_OFFSET, type)
     }
 }

@@ -16,11 +16,27 @@ message UniqIdTable {
   repeated UniqIdInfo infos = 1;
 }
 
+message ExternalReference {
+  required int64 id = 1;
+  required int32 index = 2; /* index into the modules table of ExternalRefs */
+}
+
+message JvmExternalPackage {
+  required string fq_name = 1;
+  required common.serialization.IrDeclarationContainer declaration_container = 2;
+}
+
+message ExternalRefs {
+  repeated JvmExternalPackage packages = 1;
+  repeated ExternalReference references = 2;
+}
+
 message AuxTables {
   required common.serialization.IrSymbolTable symbol_table = 1;
   required common.serialization.IrTypeTable type_table = 2;
   required common.serialization.StringTable string_table = 3;
-  required UniqIdTable uniq_id_table = 4;
+  required ExternalRefs external_refs = 4;
+  required UniqIdTable uniq_id_table = 5;
 }
 
 message JvmIrFile {
@@ -33,5 +49,3 @@ message JvmIrClass {
   required common.serialization.IrClass ir_class = 1;
   required AuxTables aux_tables = 2;
 }
-
-

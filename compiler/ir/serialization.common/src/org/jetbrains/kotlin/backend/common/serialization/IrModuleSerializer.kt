@@ -946,7 +946,7 @@ open class IrModuleSerializer(
 
         when (statement) {
             is IrDeclaration -> {
-                logger.log { " ###Declaration " }; proto.declaration = serializeDeclaration(statement)
+                logger.log { " ###Declaration " }; proto.declaration = serializeIrDeclaration(statement)
             }
             is IrExpression -> {
                 logger.log { " ###Expression " }; proto.expression = serializeExpression(statement)
@@ -1150,7 +1150,7 @@ open class IrModuleSerializer(
             if (externallyVisibleOnly && it is IrDeclarationWithVisibility && isPrivate(it.visibility)) {
                 return@forEach
             }
-            proto.addDeclaration(serializeDeclaration(it))
+            proto.addDeclaration(serializeIrDeclaration(it))
         }
         return proto.build()
     }
@@ -1212,7 +1212,7 @@ open class IrModuleSerializer(
         return proto.build()
     }
 
-    private fun serializeDeclaration(declaration: IrDeclaration): ProtoDeclaration {
+    fun serializeIrDeclaration(declaration: IrDeclaration): ProtoDeclaration {
         logger.log { "### serializing Declaration: ${ir2string(declaration)}" }
 
         val proto = ProtoDeclaration.newBuilder()
@@ -1271,7 +1271,7 @@ open class IrModuleSerializer(
                 return@forEach
             }
 
-            val byteArray = serializeDeclaration(it).toByteArray()
+            val byteArray = serializeIrDeclaration(it).toByteArray()
             val uniqId = declarationTable.uniqIdByDeclaration(it)
             writer.addDeclaration(DeclarationId(uniqId.index, uniqId.isLocal), byteArray)
             proto.addDeclarationId(protoUniqId(uniqId))

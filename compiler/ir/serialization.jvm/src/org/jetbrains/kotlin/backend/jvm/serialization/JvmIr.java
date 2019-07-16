@@ -991,6 +991,1768 @@ public final class JvmIr {
     // @@protoc_insertion_point(class_scope:org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable)
   }
 
+  public interface ExternalReferenceOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference)
+      org.jetbrains.kotlin.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>required int64 id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required int64 id = 1;</code>
+     */
+    long getId();
+
+    /**
+     * <code>required int32 index = 2;</code>
+     *
+     * <pre>
+     * index into the modules table of ExternalRefs
+     * </pre>
+     */
+    boolean hasIndex();
+    /**
+     * <code>required int32 index = 2;</code>
+     *
+     * <pre>
+     * index into the modules table of ExternalRefs
+     * </pre>
+     */
+    int getIndex();
+  }
+  /**
+   * Protobuf type {@code org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference}
+   */
+  public static final class ExternalReference extends
+      org.jetbrains.kotlin.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference)
+      ExternalReferenceOrBuilder {
+    // Use ExternalReference.newBuilder() to construct.
+    private ExternalReference(org.jetbrains.kotlin.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ExternalReference(boolean noInit) { this.unknownFields = org.jetbrains.kotlin.protobuf.ByteString.EMPTY;}
+
+    private static final ExternalReference defaultInstance;
+    public static ExternalReference getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ExternalReference getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final org.jetbrains.kotlin.protobuf.ByteString unknownFields;
+    private ExternalReference(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      org.jetbrains.kotlin.protobuf.ByteString.Output unknownFieldsOutput =
+          org.jetbrains.kotlin.protobuf.ByteString.newOutput();
+      org.jetbrains.kotlin.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          org.jetbrains.kotlin.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput, 1);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readInt64();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              index_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static org.jetbrains.kotlin.protobuf.Parser<ExternalReference> PARSER =
+        new org.jetbrains.kotlin.protobuf.AbstractParser<ExternalReference>() {
+      public ExternalReference parsePartialFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+        return new ExternalReference(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public org.jetbrains.kotlin.protobuf.Parser<ExternalReference> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private long id_;
+    /**
+     * <code>required int64 id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required int64 id = 1;</code>
+     */
+    public long getId() {
+      return id_;
+    }
+
+    public static final int INDEX_FIELD_NUMBER = 2;
+    private int index_;
+    /**
+     * <code>required int32 index = 2;</code>
+     *
+     * <pre>
+     * index into the modules table of ExternalRefs
+     * </pre>
+     */
+    public boolean hasIndex() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required int32 index = 2;</code>
+     *
+     * <pre>
+     * index into the modules table of ExternalRefs
+     * </pre>
+     */
+    public int getIndex() {
+      return index_;
+    }
+
+    private void initFields() {
+      id_ = 0L;
+      index_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasIndex()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(org.jetbrains.kotlin.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt64(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, index_);
+      }
+      output.writeRawBytes(unknownFields);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeInt64Size(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeInt32Size(2, index_);
+      }
+      size += unknownFields.size();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(byte[] data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(
+        byte[] data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseDelimitedFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    /**
+     * Protobuf type {@code org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference}
+     */
+    public static final class Builder extends
+        org.jetbrains.kotlin.protobuf.GeneratedMessageLite.Builder<
+          org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference, Builder>
+        implements
+        // @@protoc_insertion_point(builder_implements:org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference)
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReferenceOrBuilder {
+      // Construct using org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        id_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        index_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference getDefaultInstanceForType() {
+        return org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference.getDefaultInstance();
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference build() {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference buildPartial() {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference result = new org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.index_ = index_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference other) {
+        if (other == org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (other.hasIndex()) {
+          setIndex(other.getIndex());
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+
+          return false;
+        }
+        if (!hasIndex()) {
+
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long id_ ;
+      /**
+       * <code>required int64 id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required int64 id = 1;</code>
+       */
+      public long getId() {
+        return id_;
+      }
+      /**
+       * <code>required int64 id = 1;</code>
+       */
+      public Builder setId(long value) {
+        bitField0_ |= 0x00000001;
+        id_ = value;
+
+        return this;
+      }
+      /**
+       * <code>required int64 id = 1;</code>
+       */
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = 0L;
+
+        return this;
+      }
+
+      private int index_ ;
+      /**
+       * <code>required int32 index = 2;</code>
+       *
+       * <pre>
+       * index into the modules table of ExternalRefs
+       * </pre>
+       */
+      public boolean hasIndex() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required int32 index = 2;</code>
+       *
+       * <pre>
+       * index into the modules table of ExternalRefs
+       * </pre>
+       */
+      public int getIndex() {
+        return index_;
+      }
+      /**
+       * <code>required int32 index = 2;</code>
+       *
+       * <pre>
+       * index into the modules table of ExternalRefs
+       * </pre>
+       */
+      public Builder setIndex(int value) {
+        bitField0_ |= 0x00000002;
+        index_ = value;
+
+        return this;
+      }
+      /**
+       * <code>required int32 index = 2;</code>
+       *
+       * <pre>
+       * index into the modules table of ExternalRefs
+       * </pre>
+       */
+      public Builder clearIndex() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        index_ = 0;
+
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference)
+    }
+
+    static {
+      defaultInstance = new ExternalReference(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference)
+  }
+
+  public interface JvmExternalPackageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage)
+      org.jetbrains.kotlin.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>required string fq_name = 1;</code>
+     */
+    boolean hasFqName();
+    /**
+     * <code>required string fq_name = 1;</code>
+     */
+    java.lang.String getFqName();
+    /**
+     * <code>required string fq_name = 1;</code>
+     */
+    org.jetbrains.kotlin.protobuf.ByteString
+        getFqNameBytes();
+
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+     */
+    boolean hasDeclarationContainer();
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+     */
+    org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer getDeclarationContainer();
+  }
+  /**
+   * Protobuf type {@code org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage}
+   */
+  public static final class JvmExternalPackage extends
+      org.jetbrains.kotlin.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage)
+      JvmExternalPackageOrBuilder {
+    // Use JvmExternalPackage.newBuilder() to construct.
+    private JvmExternalPackage(org.jetbrains.kotlin.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private JvmExternalPackage(boolean noInit) { this.unknownFields = org.jetbrains.kotlin.protobuf.ByteString.EMPTY;}
+
+    private static final JvmExternalPackage defaultInstance;
+    public static JvmExternalPackage getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public JvmExternalPackage getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final org.jetbrains.kotlin.protobuf.ByteString unknownFields;
+    private JvmExternalPackage(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      org.jetbrains.kotlin.protobuf.ByteString.Output unknownFieldsOutput =
+          org.jetbrains.kotlin.protobuf.ByteString.newOutput();
+      org.jetbrains.kotlin.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          org.jetbrains.kotlin.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput, 1);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              org.jetbrains.kotlin.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              fqName_ = bs;
+              break;
+            }
+            case 18: {
+              org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = declarationContainer_.toBuilder();
+              }
+              declarationContainer_ = input.readMessage(org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(declarationContainer_);
+                declarationContainer_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+          }
+        }
+      } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static org.jetbrains.kotlin.protobuf.Parser<JvmExternalPackage> PARSER =
+        new org.jetbrains.kotlin.protobuf.AbstractParser<JvmExternalPackage>() {
+      public JvmExternalPackage parsePartialFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+        return new JvmExternalPackage(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public org.jetbrains.kotlin.protobuf.Parser<JvmExternalPackage> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int FQ_NAME_FIELD_NUMBER = 1;
+    private java.lang.Object fqName_;
+    /**
+     * <code>required string fq_name = 1;</code>
+     */
+    public boolean hasFqName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string fq_name = 1;</code>
+     */
+    public java.lang.String getFqName() {
+      java.lang.Object ref = fqName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        org.jetbrains.kotlin.protobuf.ByteString bs =
+            (org.jetbrains.kotlin.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          fqName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string fq_name = 1;</code>
+     */
+    public org.jetbrains.kotlin.protobuf.ByteString
+        getFqNameBytes() {
+      java.lang.Object ref = fqName_;
+      if (ref instanceof java.lang.String) {
+        org.jetbrains.kotlin.protobuf.ByteString b =
+            org.jetbrains.kotlin.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fqName_ = b;
+        return b;
+      } else {
+        return (org.jetbrains.kotlin.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DECLARATION_CONTAINER_FIELD_NUMBER = 2;
+    private org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer declarationContainer_;
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+     */
+    public boolean hasDeclarationContainer() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+     */
+    public org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer getDeclarationContainer() {
+      return declarationContainer_;
+    }
+
+    private void initFields() {
+      fqName_ = "";
+      declarationContainer_ = org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasFqName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasDeclarationContainer()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getDeclarationContainer().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(org.jetbrains.kotlin.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getFqNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, declarationContainer_);
+      }
+      output.writeRawBytes(unknownFields);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeBytesSize(1, getFqNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeMessageSize(2, declarationContainer_);
+      }
+      size += unknownFields.size();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(byte[] data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(
+        byte[] data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseDelimitedFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    /**
+     * Protobuf type {@code org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage}
+     */
+    public static final class Builder extends
+        org.jetbrains.kotlin.protobuf.GeneratedMessageLite.Builder<
+          org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage, Builder>
+        implements
+        // @@protoc_insertion_point(builder_implements:org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage)
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackageOrBuilder {
+      // Construct using org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        fqName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        declarationContainer_ = org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.getDefaultInstance();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage getDefaultInstanceForType() {
+        return org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage.getDefaultInstance();
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage build() {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage buildPartial() {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage result = new org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.fqName_ = fqName_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.declarationContainer_ = declarationContainer_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage other) {
+        if (other == org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage.getDefaultInstance()) return this;
+        if (other.hasFqName()) {
+          bitField0_ |= 0x00000001;
+          fqName_ = other.fqName_;
+
+        }
+        if (other.hasDeclarationContainer()) {
+          mergeDeclarationContainer(other.getDeclarationContainer());
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasFqName()) {
+
+          return false;
+        }
+        if (!hasDeclarationContainer()) {
+
+          return false;
+        }
+        if (!getDeclarationContainer().isInitialized()) {
+
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object fqName_ = "";
+      /**
+       * <code>required string fq_name = 1;</code>
+       */
+      public boolean hasFqName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string fq_name = 1;</code>
+       */
+      public java.lang.String getFqName() {
+        java.lang.Object ref = fqName_;
+        if (!(ref instanceof java.lang.String)) {
+          org.jetbrains.kotlin.protobuf.ByteString bs =
+              (org.jetbrains.kotlin.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            fqName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string fq_name = 1;</code>
+       */
+      public org.jetbrains.kotlin.protobuf.ByteString
+          getFqNameBytes() {
+        java.lang.Object ref = fqName_;
+        if (ref instanceof String) {
+          org.jetbrains.kotlin.protobuf.ByteString b =
+              org.jetbrains.kotlin.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fqName_ = b;
+          return b;
+        } else {
+          return (org.jetbrains.kotlin.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string fq_name = 1;</code>
+       */
+      public Builder setFqName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        fqName_ = value;
+
+        return this;
+      }
+      /**
+       * <code>required string fq_name = 1;</code>
+       */
+      public Builder clearFqName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        fqName_ = getDefaultInstance().getFqName();
+
+        return this;
+      }
+      /**
+       * <code>required string fq_name = 1;</code>
+       */
+      public Builder setFqNameBytes(
+          org.jetbrains.kotlin.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        fqName_ = value;
+
+        return this;
+      }
+
+      private org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer declarationContainer_ = org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.getDefaultInstance();
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+       */
+      public boolean hasDeclarationContainer() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+       */
+      public org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer getDeclarationContainer() {
+        return declarationContainer_;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+       */
+      public Builder setDeclarationContainer(org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        declarationContainer_ = value;
+
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+       */
+      public Builder setDeclarationContainer(
+          org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.Builder builderForValue) {
+        declarationContainer_ = builderForValue.build();
+
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+       */
+      public Builder mergeDeclarationContainer(org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer value) {
+        if (((bitField0_ & 0x00000002) == 0x00000002) &&
+            declarationContainer_ != org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.getDefaultInstance()) {
+          declarationContainer_ =
+            org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.newBuilder(declarationContainer_).mergeFrom(value).buildPartial();
+        } else {
+          declarationContainer_ = value;
+        }
+
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.common.serialization.IrDeclarationContainer declaration_container = 2;</code>
+       */
+      public Builder clearDeclarationContainer() {
+        declarationContainer_ = org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclarationContainer.getDefaultInstance();
+
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage)
+    }
+
+    static {
+      defaultInstance = new JvmExternalPackage(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage)
+  }
+
+  public interface ExternalRefsOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs)
+      org.jetbrains.kotlin.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage>
+        getPackagesList();
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage getPackages(int index);
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    int getPackagesCount();
+
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference>
+        getReferencesList();
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference getReferences(int index);
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    int getReferencesCount();
+  }
+  /**
+   * Protobuf type {@code org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs}
+   */
+  public static final class ExternalRefs extends
+      org.jetbrains.kotlin.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs)
+      ExternalRefsOrBuilder {
+    // Use ExternalRefs.newBuilder() to construct.
+    private ExternalRefs(org.jetbrains.kotlin.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ExternalRefs(boolean noInit) { this.unknownFields = org.jetbrains.kotlin.protobuf.ByteString.EMPTY;}
+
+    private static final ExternalRefs defaultInstance;
+    public static ExternalRefs getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ExternalRefs getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final org.jetbrains.kotlin.protobuf.ByteString unknownFields;
+    private ExternalRefs(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      org.jetbrains.kotlin.protobuf.ByteString.Output unknownFieldsOutput =
+          org.jetbrains.kotlin.protobuf.ByteString.newOutput();
+      org.jetbrains.kotlin.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          org.jetbrains.kotlin.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput, 1);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                packages_ = new java.util.ArrayList<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              packages_.add(input.readMessage(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage.PARSER, extensionRegistry));
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                references_ = new java.util.ArrayList<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              references_.add(input.readMessage(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          packages_ = java.util.Collections.unmodifiableList(packages_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          references_ = java.util.Collections.unmodifiableList(references_);
+        }
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static org.jetbrains.kotlin.protobuf.Parser<ExternalRefs> PARSER =
+        new org.jetbrains.kotlin.protobuf.AbstractParser<ExternalRefs>() {
+      public ExternalRefs parsePartialFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+        return new ExternalRefs(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public org.jetbrains.kotlin.protobuf.Parser<ExternalRefs> getParserForType() {
+      return PARSER;
+    }
+
+    public static final int PACKAGES_FIELD_NUMBER = 1;
+    private java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage> packages_;
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    public java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage> getPackagesList() {
+      return packages_;
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    public java.util.List<? extends org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackageOrBuilder>
+        getPackagesOrBuilderList() {
+      return packages_;
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    public int getPackagesCount() {
+      return packages_.size();
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage getPackages(int index) {
+      return packages_.get(index);
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+     */
+    public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackageOrBuilder getPackagesOrBuilder(
+        int index) {
+      return packages_.get(index);
+    }
+
+    public static final int REFERENCES_FIELD_NUMBER = 2;
+    private java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference> references_;
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    public java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference> getReferencesList() {
+      return references_;
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    public java.util.List<? extends org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReferenceOrBuilder>
+        getReferencesOrBuilderList() {
+      return references_;
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    public int getReferencesCount() {
+      return references_.size();
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference getReferences(int index) {
+      return references_.get(index);
+    }
+    /**
+     * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+     */
+    public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReferenceOrBuilder getReferencesOrBuilder(
+        int index) {
+      return references_.get(index);
+    }
+
+    private void initFields() {
+      packages_ = java.util.Collections.emptyList();
+      references_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      for (int i = 0; i < getPackagesCount(); i++) {
+        if (!getPackages(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      for (int i = 0; i < getReferencesCount(); i++) {
+        if (!getReferences(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(org.jetbrains.kotlin.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < packages_.size(); i++) {
+        output.writeMessage(1, packages_.get(i));
+      }
+      for (int i = 0; i < references_.size(); i++) {
+        output.writeMessage(2, references_.get(i));
+      }
+      output.writeRawBytes(unknownFields);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < packages_.size(); i++) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeMessageSize(1, packages_.get(i));
+      }
+      for (int i = 0; i < references_.size(); i++) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeMessageSize(2, references_.get(i));
+      }
+      size += unknownFields.size();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(
+        org.jetbrains.kotlin.protobuf.ByteString data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(byte[] data)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(
+        byte[] data,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseDelimitedFrom(
+        java.io.InputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parseFrom(
+        org.jetbrains.kotlin.protobuf.CodedInputStream input,
+        org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    /**
+     * Protobuf type {@code org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs}
+     */
+    public static final class Builder extends
+        org.jetbrains.kotlin.protobuf.GeneratedMessageLite.Builder<
+          org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs, Builder>
+        implements
+        // @@protoc_insertion_point(builder_implements:org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs)
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefsOrBuilder {
+      // Construct using org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        packages_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        references_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs getDefaultInstanceForType() {
+        return org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.getDefaultInstance();
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs build() {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs buildPartial() {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs result = new org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          packages_ = java.util.Collections.unmodifiableList(packages_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.packages_ = packages_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          references_ = java.util.Collections.unmodifiableList(references_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.references_ = references_;
+        return result;
+      }
+
+      public Builder mergeFrom(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs other) {
+        if (other == org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.getDefaultInstance()) return this;
+        if (!other.packages_.isEmpty()) {
+          if (packages_.isEmpty()) {
+            packages_ = other.packages_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensurePackagesIsMutable();
+            packages_.addAll(other.packages_);
+          }
+
+        }
+        if (!other.references_.isEmpty()) {
+          if (references_.isEmpty()) {
+            references_ = other.references_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureReferencesIsMutable();
+            references_.addAll(other.references_);
+          }
+
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        for (int i = 0; i < getPackagesCount(); i++) {
+          if (!getPackages(i).isInitialized()) {
+
+            return false;
+          }
+        }
+        for (int i = 0; i < getReferencesCount(); i++) {
+          if (!getReferences(i).isInitialized()) {
+
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          org.jetbrains.kotlin.protobuf.CodedInputStream input,
+          org.jetbrains.kotlin.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (org.jetbrains.kotlin.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage> packages_ =
+        java.util.Collections.emptyList();
+      private void ensurePackagesIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          packages_ = new java.util.ArrayList<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage>(packages_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage> getPackagesList() {
+        return java.util.Collections.unmodifiableList(packages_);
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public int getPackagesCount() {
+        return packages_.size();
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage getPackages(int index) {
+        return packages_.get(index);
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder setPackages(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePackagesIsMutable();
+        packages_.set(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder setPackages(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage.Builder builderForValue) {
+        ensurePackagesIsMutable();
+        packages_.set(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder addPackages(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePackagesIsMutable();
+        packages_.add(value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder addPackages(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensurePackagesIsMutable();
+        packages_.add(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder addPackages(
+          org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage.Builder builderForValue) {
+        ensurePackagesIsMutable();
+        packages_.add(builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder addPackages(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage.Builder builderForValue) {
+        ensurePackagesIsMutable();
+        packages_.add(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder addAllPackages(
+          java.lang.Iterable<? extends org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.JvmExternalPackage> values) {
+        ensurePackagesIsMutable();
+        org.jetbrains.kotlin.protobuf.AbstractMessageLite.Builder.addAll(
+            values, packages_);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder clearPackages() {
+        packages_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.JvmExternalPackage packages = 1;</code>
+       */
+      public Builder removePackages(int index) {
+        ensurePackagesIsMutable();
+        packages_.remove(index);
+
+        return this;
+      }
+
+      private java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference> references_ =
+        java.util.Collections.emptyList();
+      private void ensureReferencesIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          references_ = new java.util.ArrayList<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference>(references_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public java.util.List<org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference> getReferencesList() {
+        return java.util.Collections.unmodifiableList(references_);
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public int getReferencesCount() {
+        return references_.size();
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference getReferences(int index) {
+        return references_.get(index);
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder setReferences(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureReferencesIsMutable();
+        references_.set(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder setReferences(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference.Builder builderForValue) {
+        ensureReferencesIsMutable();
+        references_.set(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder addReferences(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureReferencesIsMutable();
+        references_.add(value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder addReferences(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureReferencesIsMutable();
+        references_.add(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder addReferences(
+          org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference.Builder builderForValue) {
+        ensureReferencesIsMutable();
+        references_.add(builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder addReferences(
+          int index, org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference.Builder builderForValue) {
+        ensureReferencesIsMutable();
+        references_.add(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder addAllReferences(
+          java.lang.Iterable<? extends org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalReference> values) {
+        ensureReferencesIsMutable();
+        org.jetbrains.kotlin.protobuf.AbstractMessageLite.Builder.addAll(
+            values, references_);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder clearReferences() {
+        references_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+
+        return this;
+      }
+      /**
+       * <code>repeated .org.jetbrains.kotlin.backend.jvm.serialization.ExternalReference references = 2;</code>
+       */
+      public Builder removeReferences(int index) {
+        ensureReferencesIsMutable();
+        references_.remove(index);
+
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs)
+    }
+
+    static {
+      defaultInstance = new ExternalRefs(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs)
+  }
+
   public interface AuxTablesOrBuilder extends
       // @@protoc_insertion_point(interface_extends:org.jetbrains.kotlin.backend.jvm.serialization.AuxTables)
       org.jetbrains.kotlin.protobuf.MessageLiteOrBuilder {
@@ -1023,11 +2785,20 @@ public final class JvmIr {
     org.jetbrains.kotlin.backend.common.serialization.proto.StringTable getStringTable();
 
     /**
-     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+     */
+    boolean hasExternalRefs();
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+     */
+    org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs getExternalRefs();
+
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
      */
     boolean hasUniqIdTable();
     /**
-     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
      */
     org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable getUniqIdTable();
   }
@@ -1121,8 +2892,21 @@ public final class JvmIr {
               break;
             }
             case 34: {
-              org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.Builder subBuilder = null;
+              org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.Builder subBuilder = null;
               if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                subBuilder = externalRefs_.toBuilder();
+              }
+              externalRefs_ = input.readMessage(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(externalRefs_);
+                externalRefs_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000008;
+              break;
+            }
+            case 42: {
+              org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 subBuilder = uniqIdTable_.toBuilder();
               }
               uniqIdTable_ = input.readMessage(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.PARSER, extensionRegistry);
@@ -1130,7 +2914,7 @@ public final class JvmIr {
                 subBuilder.mergeFrom(uniqIdTable_);
                 uniqIdTable_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000010;
               break;
             }
           }
@@ -1212,16 +2996,31 @@ public final class JvmIr {
       return stringTable_;
     }
 
-    public static final int UNIQ_ID_TABLE_FIELD_NUMBER = 4;
-    private org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable uniqIdTable_;
+    public static final int EXTERNAL_REFS_FIELD_NUMBER = 4;
+    private org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs externalRefs_;
     /**
-     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
      */
-    public boolean hasUniqIdTable() {
+    public boolean hasExternalRefs() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+     */
+    public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs getExternalRefs() {
+      return externalRefs_;
+    }
+
+    public static final int UNIQ_ID_TABLE_FIELD_NUMBER = 5;
+    private org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable uniqIdTable_;
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
+     */
+    public boolean hasUniqIdTable() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
      */
     public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable getUniqIdTable() {
       return uniqIdTable_;
@@ -1231,6 +3030,7 @@ public final class JvmIr {
       symbolTable_ = org.jetbrains.kotlin.backend.common.serialization.proto.IrSymbolTable.getDefaultInstance();
       typeTable_ = org.jetbrains.kotlin.backend.common.serialization.proto.IrTypeTable.getDefaultInstance();
       stringTable_ = org.jetbrains.kotlin.backend.common.serialization.proto.StringTable.getDefaultInstance();
+      externalRefs_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.getDefaultInstance();
       uniqIdTable_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -1251,6 +3051,10 @@ public final class JvmIr {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasExternalRefs()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       if (!hasUniqIdTable()) {
         memoizedIsInitialized = 0;
         return false;
@@ -1260,6 +3064,10 @@ public final class JvmIr {
         return false;
       }
       if (!getTypeTable().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getExternalRefs().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -1284,7 +3092,10 @@ public final class JvmIr {
         output.writeMessage(3, stringTable_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeMessage(4, uniqIdTable_);
+        output.writeMessage(4, externalRefs_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(5, uniqIdTable_);
       }
       output.writeRawBytes(unknownFields);
     }
@@ -1309,7 +3120,11 @@ public final class JvmIr {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += org.jetbrains.kotlin.protobuf.CodedOutputStream
-          .computeMessageSize(4, uniqIdTable_);
+          .computeMessageSize(4, externalRefs_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += org.jetbrains.kotlin.protobuf.CodedOutputStream
+          .computeMessageSize(5, uniqIdTable_);
       }
       size += unknownFields.size();
       memoizedSerializedSize = size;
@@ -1411,8 +3226,10 @@ public final class JvmIr {
         bitField0_ = (bitField0_ & ~0x00000002);
         stringTable_ = org.jetbrains.kotlin.backend.common.serialization.proto.StringTable.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000004);
-        uniqIdTable_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.getDefaultInstance();
+        externalRefs_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000008);
+        uniqIdTable_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.getDefaultInstance();
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -1451,6 +3268,10 @@ public final class JvmIr {
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
+        result.externalRefs_ = externalRefs_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
         result.uniqIdTable_ = uniqIdTable_;
         result.bitField0_ = to_bitField0_;
         return result;
@@ -1466,6 +3287,9 @@ public final class JvmIr {
         }
         if (other.hasStringTable()) {
           mergeStringTable(other.getStringTable());
+        }
+        if (other.hasExternalRefs()) {
+          mergeExternalRefs(other.getExternalRefs());
         }
         if (other.hasUniqIdTable()) {
           mergeUniqIdTable(other.getUniqIdTable());
@@ -1488,6 +3312,10 @@ public final class JvmIr {
           
           return false;
         }
+        if (!hasExternalRefs()) {
+
+          return false;
+        }
         if (!hasUniqIdTable()) {
           
           return false;
@@ -1498,6 +3326,10 @@ public final class JvmIr {
         }
         if (!getTypeTable().isInitialized()) {
           
+          return false;
+        }
+        if (!getExternalRefs().isInitialized()) {
+
           return false;
         }
         if (!getUniqIdTable().isInitialized()) {
@@ -1706,21 +3538,81 @@ public final class JvmIr {
         return this;
       }
 
-      private org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable uniqIdTable_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.getDefaultInstance();
+      private org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs externalRefs_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.getDefaultInstance();
       /**
-       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
        */
-      public boolean hasUniqIdTable() {
+      public boolean hasExternalRefs() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+       */
+      public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs getExternalRefs() {
+        return externalRefs_;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+       */
+      public Builder setExternalRefs(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        externalRefs_ = value;
+
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+       */
+      public Builder setExternalRefs(
+          org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.Builder builderForValue) {
+        externalRefs_ = builderForValue.build();
+
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+       */
+      public Builder mergeExternalRefs(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs value) {
+        if (((bitField0_ & 0x00000008) == 0x00000008) &&
+            externalRefs_ != org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.getDefaultInstance()) {
+          externalRefs_ =
+            org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.newBuilder(externalRefs_).mergeFrom(value).buildPartial();
+        } else {
+          externalRefs_ = value;
+        }
+
+        bitField0_ |= 0x00000008;
+        return this;
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.ExternalRefs external_refs = 4;</code>
+       */
+      public Builder clearExternalRefs() {
+        externalRefs_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.ExternalRefs.getDefaultInstance();
+
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      private org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable uniqIdTable_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.getDefaultInstance();
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
+       */
+      public boolean hasUniqIdTable() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
        */
       public org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable getUniqIdTable() {
         return uniqIdTable_;
       }
       /**
-       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
        */
       public Builder setUniqIdTable(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable value) {
         if (value == null) {
@@ -1728,24 +3620,24 @@ public final class JvmIr {
         }
         uniqIdTable_ = value;
 
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
-       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
        */
       public Builder setUniqIdTable(
           org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.Builder builderForValue) {
         uniqIdTable_ = builderForValue.build();
 
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
-       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
        */
       public Builder mergeUniqIdTable(org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable value) {
-        if (((bitField0_ & 0x00000008) == 0x00000008) &&
+        if (((bitField0_ & 0x00000010) == 0x00000010) &&
             uniqIdTable_ != org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.getDefaultInstance()) {
           uniqIdTable_ =
             org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.newBuilder(uniqIdTable_).mergeFrom(value).buildPartial();
@@ -1753,16 +3645,16 @@ public final class JvmIr {
           uniqIdTable_ = value;
         }
 
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         return this;
       }
       /**
-       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 4;</code>
+       * <code>required .org.jetbrains.kotlin.backend.jvm.serialization.UniqIdTable uniq_id_table = 5;</code>
        */
       public Builder clearUniqIdTable() {
         uniqIdTable_ = org.jetbrains.kotlin.backend.jvm.serialization.JvmIr.UniqIdTable.getDefaultInstance();
 
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
