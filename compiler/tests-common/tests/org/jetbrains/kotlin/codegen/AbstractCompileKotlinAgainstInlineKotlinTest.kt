@@ -22,18 +22,19 @@ import java.io.File
 abstract class AbstractCompileKotlinAgainstInlineKotlinTest : AbstractCompileKotlinAgainstKotlinTest() {
     override fun doMultiFileTest(wholeFile: File, files: List<TestFile>) {
         val isIgnored = InTextDirectivesUtils.isIgnoredTarget(backend, wholeFile)
-        val (factory1, factory2) = doTwoFileTest(
-            files.filter { it.name.endsWith(".kt") },
-            !isIgnored
-        )
+        val factories = doMultiFileTest(files.filter { it.name.endsWith(".kt") }, !isIgnored)
         try {
-            val allGeneratedFiles = factory1.asList() + factory2.asList()
-            val sourceFiles = factory1.inputFiles + factory2.inputFiles
+            val allGeneratedFiles = factories.flatMap { it.asList() }
+            val sourceFiles = factories.flatMap { it.inputFiles }
             InlineTestUtil.checkNoCallsToInline(allGeneratedFiles.filterClassFiles(), sourceFiles)
             SMAPTestUtil.checkSMAP(files, allGeneratedFiles.filterClassFiles(), true)
         } catch (e: Throwable) {
             if (!isIgnored) {
-                println("FIRST:\n\n${factory1.createText()}\n\nSECOND:\n\n${factory2.createText()}")
+                println(
+                    factories.mapIndexed { i, factory ->
+                        "File#${i + 1}\n\n${factory.createText()}"
+                    }.joinToString(separator = "\n\n")
+                )
             }
             throw e
         }

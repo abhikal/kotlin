@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.codegen;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
-import kotlin.Pair;
 import kotlin.text.StringsKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.cli.common.modules.ModuleBuilder;
@@ -28,6 +27,7 @@ import org.jetbrains.kotlin.utils.ExceptionUtilsKt;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,48 +35,64 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractCompileKotlinAgainstKotlinTest extends CodegenTestCase {
     private File tmpdir;
-    private File aDir;
-    private File bDir;
+    private File[] dirs;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         tmpdir = KotlinTestUtils.tmpDirForTest(this);
-        aDir = new File(tmpdir, "a");
-        bDir = new File(tmpdir, "b");
-        KotlinTestUtils.mkdirs(aDir);
-        KotlinTestUtils.mkdirs(bDir);
     }
 
     @Override
     protected void doMultiFileTest(@NotNull File wholeFile, @NotNull List<TestFile> files) {
         boolean isIgnored = InTextDirectivesUtils.isIgnoredTarget(getBackend(), wholeFile);
-        doTwoFileTest(files, !isIgnored);
+        doMultiFileTest(files, !isIgnored);
     }
 
     @NotNull
-    protected Pair<ClassFileFactory, ClassFileFactory> doTwoFileTest(@NotNull List<TestFile> files, boolean reportProblems) {
-        // Note that it may be beneficial to improve this test to handle many files, compiling them successively against all previous
-        assert files.size() == 2 || (files.size() == 3 && files.get(2).name.equals("CoroutineUtil.kt")) : "There should be exactly two files in this test";
-        TestFile fileA = files.get(0);
-        TestFile fileB = files.get(1);
-        ClassFileFactory factoryA = compileA(fileA, files);
-        ClassFileFactory factoryB = null;
+    protected List<ClassFileFactory> doMultiFileTest(@NotNull List<TestFile> files, boolean reportProblems) {
+        //// Note that it may be beneficial to improve this test to handle many files, compiling them successively against all previous
+        //assert files.size() == 2 || (files.size() == 3 && files.get(2).name.equals("CoroutineUtil.kt")) : "There should be exactly two files in this test";
+
+        dirs = new File[files.size()];
+        for (int i = 0; i < files.size(); i++) {
+            dirs[i] = new File(tmpdir, Integer.toString(i));
+            KotlinTestUtils.mkdirs(dirs[i]);
+        }
+
+        List<TestFile> filesA;
+        List<TestFile> otherFiles;
+        // Special case
+        if (files.size() == 3 && files.get(2).name.equals("CoroutineUtil.kt")) {
+            filesA = Arrays.asList(files.get(0), files.get(2));
+            otherFiles = Collections.singletonList(files.get(1));
+        } else {
+            filesA = Collections.singletonList(files.get(0));
+            otherFiles = files.subList(1, files.size());
+        }
+        List<ClassFileFactory> factories = new ArrayList<ClassFileFactory>();
+        factories.add(compileFirst(filesA, files));
         try {
-            factoryB = compileB(fileB, files);
-            invokeBox(PackagePartClassUtils.getFilePartShortName(new File(fileB.name).getName()));
+            for (int i = 0; i < otherFiles.size(); i++) {
+                TestFile otherFile = otherFiles.get(i);
+                factories.add(compileOther(otherFile, files, i + 1));
+            }
+            invokeBox(PackagePartClassUtils.getFilePartShortName(new File(otherFiles.get(otherFiles.size() - 1).name).getName()));
         }
         catch (Throwable e) {
             if (reportProblems) {
-                String result = "FIRST: \n\n" + factoryA.createText();
-                if (factoryB != null) {
-                    result += "\n\nSECOND: \n\n" + factoryB.createText();
+                StringBuilder result = new StringBuilder();
+                for (int i = 0; i < factories.size(); i++) {
+                    if (i > 0) {
+                        result.append("\n\n");
+                    }
+                    result.append("\n\nFile#" + (i + 1) + ": \n\n" + factories.get(i).createText());
                 }
                 System.out.println(result);
             }
             throw ExceptionUtilsKt.rethrow(e);
         }
-        return new Pair<>(factoryA, factoryB);
+        return factories;
     }
 
     private void invokeBox(@NotNull String className) throws Exception {
@@ -85,50 +101,50 @@ public abstract class AbstractCompileKotlinAgainstKotlinTest extends CodegenTest
 
     @NotNull
     private URLClassLoader createGeneratedClassLoader() throws Exception {
+        URL[] urls = new URL[dirs.length];
+        for (int i = 0; i < dirs.length; i++) {
+            urls[i] = dirs[i].toURI().toURL();
+        }
         return new URLClassLoader(
-                new URL[]{ bDir.toURI().toURL(), aDir.toURI().toURL() },
+                urls,
                 ForTestCompileRuntime.runtimeAndReflectJarClassLoader()
         );
     }
 
     @NotNull
-    private ClassFileFactory compileA(@NotNull TestFile testFile, List<TestFile> files) {
-        Disposable compileDisposable = createDisposable("compileA");
+    private ClassFileFactory compileFirst(List<TestFile> filesToCompile, List<TestFile> files) {
+        Disposable compileDisposable = createDisposable("0");
         CompilerConfiguration configuration = createConfiguration(
                 ConfigurationKind.ALL, getJdkKind(files), Collections.singletonList(KotlinTestUtils.getAnnotationsJar()),
-                Collections.emptyList(), Collections.singletonList(testFile)
+                Collections.emptyList(), Collections.singletonList(filesToCompile.get(0))
         );
 
-        configuration.put(CommonConfigurationKeys.MODULE_NAME, "a");
+        configuration.put(CommonConfigurationKeys.MODULE_NAME, "0");
 
         KotlinCoreEnvironment environment = KotlinCoreEnvironment.createForTests(
                 compileDisposable, configuration, EnvironmentConfigFiles.JVM_CONFIG_FILES);
 
-        List<TestFile> filesToCompile =
-                files.size() == 2
-                ? Collections.singletonList(testFile)
-                // A-file and CoroutineUtil.kt
-                : Arrays.asList(testFile, files.get(2));
-
-        return compileKotlin(filesToCompile, aDir, environment, compileDisposable);
+        return compileKotlin(filesToCompile, dirs[0], environment, compileDisposable);
     }
 
     @NotNull
-    private ClassFileFactory compileB(@NotNull TestFile testFile, List<TestFile> files) {
+    private ClassFileFactory compileOther(@NotNull TestFile testFile, List<TestFile> files, int fileNo) {
+        File outDir = dirs[fileNo];
+        File importedDir = dirs[fileNo - 1];
         String commonHeader = StringsKt.substringBefore(files.get(0).content, "FILE:", "");
         CompilerConfiguration configuration = createConfiguration(
-                ConfigurationKind.ALL, getJdkKind(files), Lists.newArrayList(KotlinTestUtils.getAnnotationsJar(), aDir),
+                ConfigurationKind.ALL, getJdkKind(files), Lists.newArrayList(KotlinTestUtils.getAnnotationsJar(), importedDir),
                 Collections.emptyList(), Lists.newArrayList(testFile, new TestFile("header", commonHeader))
         );
 
-        configuration.put(CommonConfigurationKeys.MODULE_NAME, "b");
+        configuration.put(CommonConfigurationKeys.MODULE_NAME, Integer.toString(fileNo));
 
-        Disposable compileDisposable = createDisposable("compileB");
+        Disposable compileDisposable = createDisposable(Integer.toString(fileNo));
         KotlinCoreEnvironment environment = KotlinCoreEnvironment.createForTests(
                 compileDisposable, configuration, EnvironmentConfigFiles.JVM_CONFIG_FILES
         );
 
-        return compileKotlin(Collections.singletonList(testFile), bDir, environment, compileDisposable);
+        return compileKotlin(Collections.singletonList(testFile), outDir, environment, compileDisposable);
     }
 
     private Disposable createDisposable(String debugName) {

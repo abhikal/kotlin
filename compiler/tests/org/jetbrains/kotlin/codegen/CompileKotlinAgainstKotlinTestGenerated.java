@@ -323,6 +323,11 @@ public class CompileKotlinAgainstKotlinTestGenerated extends AbstractCompileKotl
         runTest("compiler/testData/compileKotlinAgainstKotlin/targetedJvmName.kt");
     }
 
+    @TestMetadata("threeModules.kt")
+    public void testThreeModules() throws Exception {
+        runTest("compiler/testData/compileKotlinAgainstKotlin/threeModules.kt");
+    }
+
     @TestMetadata("typeAliasesKt13181.kt")
     public void testTypeAliasesKt13181() throws Exception {
         runTest("compiler/testData/compileKotlinAgainstKotlin/typeAliasesKt13181.kt");
