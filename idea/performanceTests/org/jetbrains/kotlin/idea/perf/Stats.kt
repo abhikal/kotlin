@@ -32,16 +32,26 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
         val meanNs = timingsNs.average()
         val meanMs = meanNs.toLong().nsToMs
 
-        val stdDivMs = (sqrt(
+        val stdDevMs = if (timingsNs.size > 1) (sqrt(
             timingsNs.fold(0.0,
-                           { accumulator, next -> accumulator + (1.0 * (next - meanMs)).pow(2.0) })
-        ) / timingsNs.size).toLong().nsToMs
+                           { accumulator, next -> accumulator + (1.0 * (next - meanNs)).pow(2) })
+        ) / (timingsNs.size - 1)).toLong().nsToMs
+        else 0
 
-        println("##teamcity[buildStatisticValue key='$id' value='$meanMs']")
-        println("##teamcity[buildStatisticValue key='$id stdDev' value='$stdDivMs']")
+        val geomMeanMs = geomMean(timingsNs.toList()).nsToMs
+
+        for (v in listOf(
+            Triple("mean", "", meanMs),
+            Triple("stdDev", " stdDev", stdDevMs),
+            Triple("geomMean", "geomMean", geomMeanMs)
+        )) {
+            println("##teamcity[testStarted name='$id : ${v.first}' captureStandardOutput='true']")
+            println("##teamcity[buildStatisticValue key='$id${v.second}' value='${v.third}']")
+            println("##teamcity[testFinished name='$id : ${v.first}' duration='${v.third}']")
+        }
 
         perfTestRawDataMs.addAll(timingsNs.map { it.nsToMs }.toList())
-        append(arrayOf(id, meanMs, stdDivMs))
+        append(arrayOf(id, meanMs, stdDevMs))
     }
 
     private fun append(values: Array<Any>) {
@@ -77,15 +87,14 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
             mainPhase(iterations, setUp, test, tearDown, timingsNs, namePrefix, errors)
 
             for (attempt in 0 until iterations) {
-                for (n in listOf("$namePrefix #$attempt", "performance test: $namePrefix #$attempt")) {
-                    println("##teamcity[testStarted name='$n' captureStandardOutput='true']")
-                    if (errors[attempt] != null) {
-                        tcPrintErrors(n, listOf(errors[attempt]!!))
-                    }
-                    val spentMs = timingsNs[attempt].nsToMs
-                    println("##teamcity[buildStatisticValue key='$n' value='$spentMs']")
-                    println("##teamcity[testFinished name='$n' duration='$spentMs']")
+                val n = "$namePrefix #$attempt"
+                println("##teamcity[testStarted name='$n' captureStandardOutput='true']")
+                if (errors[attempt] != null) {
+                    tcPrintErrors(n, listOf(errors[attempt]!!))
                 }
+                val spentMs = timingsNs[attempt].nsToMs
+                println("##teamcity[buildStatisticValue key='$n' value='$spentMs']")
+                println("##teamcity[testFinished name='$n' duration='$spentMs']")
             }
 
             append(namePrefix, timingsNs)

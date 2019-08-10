@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.idea.perf
 
+import com.intellij.openapi.editor.Document
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ex.ProjectManagerEx
 import com.intellij.psi.PsiDocumentManager
@@ -23,6 +24,14 @@ fun commitAllDocuments() {
             psiDocumentManagerBase.commitAllDocuments()
         })
     }
+}
+
+fun commitDocument(project: Project, document: Document) {
+    val psiDocumentManagerBase = PsiDocumentManager.getInstance(project) as PsiDocumentManagerBase
+
+    EdtTestUtil.runInEdtAndWait(ThrowableRunnable {
+        psiDocumentManagerBase.commitDocument(document)
+    })
 }
 
 fun enableHints(enable: Boolean) =

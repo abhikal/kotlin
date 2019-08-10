@@ -50,25 +50,59 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
 
                 perfHighlightFile("compiler/psi/src/org/jetbrains/kotlin/psi/KtFile.kt", stats = it)
 
+//                typeAndCheckLookup(
+//                    myProject!!,
+//                    "compiler/psi/src/org/jetbrains/kotlin/psi/KtFile.kt",
+//                    "override fun getDeclarations(): List<KtDeclaration> {",
+//                    "val q = import",
+//                    lookupElements = listOf("importDirectives")
+//                )
+
                 perfHighlightFile("compiler/psi/src/org/jetbrains/kotlin/psi/KtElement.kt", stats = it)
             }
         }
     }
 
     fun testKotlinProjectHighlightBuildGradle() {
-        tcSuite("Kotlin project highlight build gradle") {
-            val stats = Stats("kotlin project highlight build gradle")
+        tcSuite("Kotlin gradle.kts") {
+            val stats = Stats("kotlin gradle.kts")
             stats.use {
                 perfOpenKotlinProject(it)
 
-                enableAnnotatorsAndLoadDefinitions()
+                perfScriptDependenciesBuildGradleKts(it)
+                perfScriptDependenciesIdeaBuildGradleKts(it)
+                perfScriptDependenciesJpsGradleKts(it)
+                perfScriptDependenciesVersionGradleKts(it)
 
-                perfFileAnalysisBuildGradleKts(it)
-                perfFileAnalysisIdeaBuildGradleKts(it)
-                perfFileAnalysisJpsGradleKts(it)
-                perfFileAnalysisVersionGradleKts(it)
+                perfTypeAndAutocomplete(
+                    it, "build.gradle.kts", "tasks {",
+                    "crea",
+                    lookupElements = listOf("create"),
+                    note = "tasks-create"
+                )
+
+//                perfFileAnalysisBuildGradleKts(it)
+//                perfFileAnalysisIdeaBuildGradleKts(it)
+//                perfFileAnalysisJpsGradleKts(it)
+//                perfFileAnalysisVersionGradleKts(it)
             }
         }
+    }
+
+    private fun perfScriptDependenciesBuildGradleKts(it: Stats) {
+        perfScriptDependencies("build.gradle.kts", stats = it)
+    }
+
+    private fun perfScriptDependenciesIdeaBuildGradleKts(it: Stats) {
+        perfScriptDependencies("idea/build.gradle.kts", stats = it, note = "idea/")
+    }
+
+    private fun perfScriptDependenciesJpsGradleKts(it: Stats) {
+        perfScriptDependencies("gradle/jps.gradle.kts", stats = it, note = "gradle/")
+    }
+
+    private fun perfScriptDependenciesVersionGradleKts(it: Stats) {
+        perfScriptDependencies("gradle/versions.gradle.kts", stats = it, note = "gradle/")
     }
 
     private fun perfFileAnalysisBuildGradleKts(it: Stats) {
