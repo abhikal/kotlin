@@ -13,13 +13,13 @@ import kotlin.system.measureNanoTime
 import java.lang.ref.WeakReference
 import kotlin.math.exp
 import kotlin.math.ln
+import kotlin.test.assertEquals
 
 class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "ValueMS", "StdDev")) : Closeable {
     private val perfTestRawDataMs = mutableListOf<Long>()
 
-    private val statsFile: File =
-        File("build/stats${if (name.isNotEmpty()) "-${name.toLowerCase().replace(' ', '-')}" else ""}.csv")
-            .absoluteFile
+    private val statsFile: File = File("build/stats${statFilePrefix()}.csv").absoluteFile
+
     private val statsOutput: BufferedWriter
 
     init {
@@ -27,6 +27,8 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
 
         statsOutput.appendln(header.joinToString())
     }
+
+    private fun statFilePrefix() = if (name.isNotEmpty()) "-${name.toLowerCase().replace(' ', '-').replace('/', '_')}" else ""
 
     private fun append(id: String, timingsNs: LongArray) {
         val meanNs = timingsNs.average()
@@ -77,7 +79,7 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
         test: (TestData<K, T>) -> Unit,
         tearDown: (TestData<K, T>) -> Unit = { null }
     ) {
-        val namePrefix = "$name: $testName"
+        val namePrefix = "$testName"
         val timingsNs = LongArray(iterations)
         val errors = Array<Throwable?>(iterations, init = { null })
 
@@ -86,19 +88,29 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
 
             mainPhase(iterations, setUp, test, tearDown, timingsNs, namePrefix, errors)
 
-            for (attempt in 0 until iterations) {
-                val n = "$namePrefix #$attempt"
-                println("##teamcity[testStarted name='$n' captureStandardOutput='true']")
-                if (errors[attempt] != null) {
-                    tcPrintErrors(n, listOf(errors[attempt]!!))
-                }
-                val spentMs = timingsNs[attempt].nsToMs
-                println("##teamcity[buildStatisticValue key='$n' value='$spentMs']")
-                println("##teamcity[testFinished name='$n' duration='$spentMs']")
-            }
-
-            append(namePrefix, timingsNs)
+            assertEquals(iterations, timingsNs.size)
+            appendTimings(namePrefix, errors, timingsNs)
         }
+    }
+
+    fun appendTimings(
+        prefix: String,
+        errors: Array<Throwable?>,
+        timingsNs: LongArray
+    ) {
+        assertEquals(timingsNs.size, errors.size)
+        val namePrefix = "$name $prefix"
+        for (attempt in 0 until timingsNs.size) {
+            val n = "$namePrefix #$attempt"
+            printTestStarted(n)
+            if (errors[attempt] != null) {
+                tcPrintErrors(n, listOf(errors[attempt]!!))
+            }
+            val spentMs = timingsNs[attempt].nsToMs
+            printTestFinished(n, spentMs)
+        }
+
+        append(namePrefix, timingsNs)
     }
 
     private fun <K, T> mainPhase(
@@ -150,7 +162,7 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
             triggerGC(attempt)
 
             val n = "$namePrefix warm-up #$attempt"
-            println("##teamcity[testStarted name='$n' captureStandardOutput='true']")
+            printTestStarted(n)
 
             try {
                 setUp(testData)
@@ -171,9 +183,7 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
                 } finally {
                     tearDown(testData)
                 }
-                val spentMs = spentNs.nsToMs
-                println("##teamcity[buildStatisticValue key='$n' value='$spentMs']")
-                println("##teamcity[testFinished name='$n' duration='$spentMs']")
+                printTestFinished(n, spentNs.nsToMs)
             } catch (t: Throwable) {
                 println("##teamcity[testFinished name='$n']")
                 println("error at $n:")
@@ -181,6 +191,15 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
                 throw t
             }
         }
+    }
+
+    fun printTestStarted(testName: String) {
+        println("##teamcity[testStarted name='$testName' captureStandardOutput='true']")
+    }
+
+    fun printTestFinished(testName: String, spentMs: Long) {
+        println("##teamcity[buildStatisticValue key='$testName' value='$spentMs']")
+        println("##teamcity[testFinished name='$testName' duration='$spentMs']")
     }
 
     private fun triggerGC(attempt: Int) {

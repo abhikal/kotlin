@@ -20,6 +20,7 @@ import com.intellij.lang.LanguageAnnotators
 import com.intellij.lang.StdLanguages
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.lang.java.JavaLanguage
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.EditorFactory
@@ -64,11 +65,13 @@ import com.intellij.util.indexing.UnindexedFilesUpdater
 import com.intellij.util.io.exists
 import com.intellij.xml.XmlSchemaProvider
 import org.jetbrains.kotlin.idea.KotlinLanguage
+import org.jetbrains.kotlin.idea.configuration.getModulesWithKotlinFiles
 import org.jetbrains.kotlin.idea.core.script.ScriptDefinitionsManager
 import org.jetbrains.kotlin.idea.core.script.ScriptDependenciesManager
 import org.jetbrains.kotlin.idea.core.script.settings.KotlinScriptingSettings
 import org.jetbrains.kotlin.idea.core.util.toPsiFile
 import org.jetbrains.kotlin.idea.framework.KotlinSdkType
+import org.jetbrains.kotlin.idea.project.getAndCacheLanguageLevelByDependencies
 import org.jetbrains.kotlin.idea.test.ConfigLibraryUtil
 import org.jetbrains.kotlin.idea.test.invalidateLibraryCache
 import org.jetbrains.plugins.gradle.service.project.GradleProjectOpenProcessor
@@ -134,7 +137,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
             }).run()
     }
 
-    private fun simpleFilename(fileName: String): String {
+    fun simpleFilename(fileName: String): String {
         val lastIndexOf = fileName.lastIndexOf('/')
         return if (lastIndexOf >= 0) fileName.substring(lastIndexOf + 1) else fileName
     }
@@ -207,6 +210,14 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                         //openGradleProject(projectPath, project)
                         refreshGradleProject(project)
                     }
+
+                    ApplicationManager.getApplication().executeOnPooledThread {
+                        DumbService.getInstance(project).waitForSmartMode()
+
+                        for (module in getModulesWithKotlinFiles(project)) {
+                            module.getAndCacheLanguageLevelByDependencies()
+                        }
+                    }.get()
 
                     assertTrue(
                         "project has to have at least one module",
@@ -309,7 +320,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
 
             if (lookupElements.isNotEmpty()) {
                 val elements = editorFixture.complete(CompletionType.BASIC, 1) ?: emptyArray()
-                val items = elements?.map { it.lookupString }.toList()
+                val items = elements.map { it.lookupString }.toList()
                 for (lookupElement in lookupElements) {
                     assertTrue("'$lookupElement' has to be present in items", items.contains(lookupElement))
                 }
@@ -392,20 +403,19 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                 } finally {
                     it.setUpValue?.let { pair ->
                         val document = pair.second.document
-                        val fixture = pair.second.fixture
                         val file = pair.second.psiFile
                         val text = pair.first
 
-                        runWriteAction {
-                            if (revertChangesAtTheEnd) {
+                        if (revertChangesAtTheEnd) {
+                            runWriteAction {
                                 // TODO: [VD] revert ?
                                 //editorFixture.performEditorAction(IdeActions.SELECTED_CHANGES_ROLLBACK)
                                 document.setText(text)
+                                commitDocument(project, document)
                             }
-                            commitAllDocuments()
-                            FileEditorManager.getInstance(project).closeFile(file.virtualFile)
-                            PsiManager.getInstance(project).dropPsiCaches()
+                            dispatchAllInvocationEvents()
                         }
+                        cleanupCaches(project, file.virtualFile)
                     }
                 }
             }
@@ -473,7 +483,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         note: String = ""
     ): List<HighlightInfo> {
         return highlightFile {
-            var isWarmUp = note == "warm-up"
+            val isWarmUp = note == "warm-up"
             var highlightInfos: List<HighlightInfo> = emptyList()
             stats.perfTest<EditorFile, List<HighlightInfo>>(
                 warmUpIterations = if (isWarmUp) 1 else 3,
@@ -503,12 +513,12 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         }
     }
 
-    private fun highlightFile(block: () -> List<HighlightInfo>): List<HighlightInfo> {
-        var highlightInfos: List<HighlightInfo> = emptyList()
+    fun <T> highlightFile(block: () -> T): T {
+        var value: T? = null
         IdentifierHighlighterPassFactory.doWithHighlightingEnabled {
-            highlightInfos = block()
+            value = block()
         }
-        return highlightInfos
+        return value!!
     }
 
     private fun highlightFile(project: Project, psiFile: PsiFile): List<HighlightInfo> {
@@ -536,8 +546,8 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                 it.value = it.setUpValue
             },
             tearDown = {
+                it.setUpValue?.let { ef -> cleanupCaches(project, ef.psiFile.virtualFile) }
                 it.value?.let { v -> assertNotNull(v) }
-                cleanupCaches(project, it.setUpValue!!.psiFile.virtualFile)
             }
         )
     }
@@ -556,7 +566,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         MadTestingUtil.enableAllInspections(project, disposable)
 
         try {
-            IdentifierHighlighterPassFactory.doWithHighlightingEnabled {
+            highlightFile {
                 stats.perfTest(
                     testName = "fileAnalysis ${notePrefix(note)}${simpleFilename(fileName)}",
                     setUp = perfFileAnalysisSetUp(project, fileName),
@@ -569,16 +579,21 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         }
     }
 
-    private fun notePrefix(note: String) = if (note.isNotEmpty()) {
+    fun notePrefix(note: String) = if (note.isNotEmpty()) {
         if (note.endsWith("/")) note else "$note "
     } else ""
 
-    private fun perfFileAnalysisSetUp(
+    fun perfFileAnalysisSetUp(
         project: Project,
         fileName: String
-    ): (TestData<EditorFile, List<HighlightInfo>>) -> Unit {
+    ): (TestData<FixtureEditorFile, List<HighlightInfo>>) -> Unit {
         return {
             val fileInEditor = openFileInEditor(project, fileName)
+
+            val file = fileInEditor.psiFile
+            val virtualFile = file.virtualFile
+            val editor = EditorFactory.getInstance().getEditors(fileInEditor.document, project)[0]
+            val fixture = EditorTestFixture(project, editor, virtualFile)
 
             // Note: Kotlin scripts require dependencies to be loaded
             if (isAKotlinScriptFile(fileName)) {
@@ -589,32 +604,32 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
             //enableHints(false)
 
             println("fileAnalysis -> $fileName\n")
-            it.setUpValue = fileInEditor
+            it.setUpValue = FixtureEditorFile(file, editor.document, fixture)
         }
     }
 
     // quite simple impl - good so far
     fun isAKotlinScriptFile(fileName: String) = fileName.endsWith(".kts")
 
-    private fun perfFileAnalysisTest(project: Project): (TestData<EditorFile, List<HighlightInfo>>) -> Unit {
+    fun perfFileAnalysisTest(project: Project): (TestData<FixtureEditorFile, List<HighlightInfo>>) -> Unit {
         return {
-            val fileInEditor = it.setUpValue!!
-            it.value = highlightFile(project, fileInEditor.psiFile)
+            it.value = it.setUpValue?.let { fef ->
+                fef.fixture.doHighlighting()
+            }
         }
     }
 
-    private fun perfFileAnalysisTearDown(
+    fun perfFileAnalysisTearDown(
         fileName: String,
         project: Project
-    ): (TestData<EditorFile, List<HighlightInfo>>) -> Unit {
+    ): (TestData<FixtureEditorFile, List<HighlightInfo>>) -> Unit {
         return {
-            //println("fileAnalysis <- $fileName:\n${it.value?.joinToString("\n")}\n")
             println("fileAnalysis <- $fileName:\n${it.value?.size ?: 0} highlightInfos\n")
             cleanupCaches(project, it.setUpValue!!.psiFile.virtualFile)
         }
     }
 
-    private fun cleanupCaches(project: Project, vFile: VirtualFile) {
+    fun cleanupCaches(project: Project, vFile: VirtualFile) {
         commitAllDocuments()
         FileEditorManager.getInstance(project).closeFile(vFile)
         PsiManager.getInstance(project).dropPsiCaches()
