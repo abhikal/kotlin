@@ -43,7 +43,6 @@ import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl
 import com.intellij.openapi.roots.FileIndexFacade
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.startup.StartupManager
-import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -58,7 +57,6 @@ import com.intellij.psi.xml.XmlFileNSInfoProvider
 import com.intellij.testFramework.*
 import com.intellij.testFramework.fixtures.EditorTestFixture
 import com.intellij.testFramework.fixtures.impl.CodeInsightTestFixtureImpl
-import com.intellij.testFramework.propertyBased.MadTestingUtil
 import com.intellij.util.ArrayUtilRt
 import com.intellij.util.ThrowableRunnable
 import com.intellij.util.indexing.UnindexedFilesUpdater
@@ -207,9 +205,15 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                     // it is a temporary dirty hack as it is fixed in latest IC:
                     // ProjectUtil.openProject picks up gradle import via extension point
                     if (pair.second && ModuleManager.getInstance(project).modules.isEmpty()) {
-                        //openGradleProject(projectPath, project)
-                        refreshGradleProject(project)
+                        try {
+                            openGradleProject(projectPath, project)
+                        } catch (e: Throwable) {
+                            // TODO: [VD] have to handle it more accurate
+                            e.printStackTrace();
+                        }
                     }
+
+                    refreshGradleProject(project)
 
                     ApplicationManager.getApplication().executeOnPooledThread {
                         DumbService.getInstance(project).waitForSmartMode()
@@ -344,12 +348,13 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         insertString: String,
         surroundItems: String = "\n",
         lookupElements: List<String>,
+        typeAfterMarker: Boolean = true,
         revertChangesAtTheEnd: Boolean = true,
         note: String = ""
     ) = perfTypeAndAutocomplete(
         myProject!!, stats, fileName, marker, insertString, surroundItems,
-        lookupElements = lookupElements, revertChangesAtTheEnd = revertChangesAtTheEnd,
-        note = note
+        lookupElements = lookupElements, typeAfterMarker = typeAfterMarker,
+        revertChangesAtTheEnd = revertChangesAtTheEnd, note = note
     )
 
     fun perfTypeAndAutocomplete(
@@ -360,11 +365,14 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         insertString: String,
         surroundItems: String = "\n",
         lookupElements: List<String>,
+        typeAfterMarker: Boolean = true,
         revertChangesAtTheEnd: Boolean = true,
         note: String = ""
     ) {
         assertTrue("lookupElements has to be not empty", lookupElements.isNotEmpty())
         stats.perfTest<Pair<String, FixtureEditorFile>, Array<LookupElement>>(
+            warmUpIterations = 8,
+            iterations = 15,
             testName = "typeAndAutocomplete ${notePrefix(note)}$fileName",
             setUp = {
                 val fileInEditor = openFileInEditor(project, fileName)
@@ -379,13 +387,25 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
 
                 val tasksIdx = fileInEditor.document.text.indexOf(marker)
                 assertTrue(tasksIdx > 0)
-                editor.caretModel.moveToOffset(tasksIdx + marker.length + 1)
+                if (typeAfterMarker) {
+                    editor.caretModel.moveToOffset(tasksIdx + marker.length + 1)
+                } else {
+                    editor.caretModel.moveToOffset(tasksIdx - 1)
+                }
 
                 for (surroundItem in surroundItems) {
                     EditorTestUtil.performTypingAction(editor, surroundItem)
                 }
 
-                editor.caretModel.moveToOffset(editor.caretModel.offset - 1)
+                editor.caretModel.moveToOffset(editor.caretModel.offset - if (typeAfterMarker) 1 else 2)
+
+                if (!typeAfterMarker) {
+                    for (surroundItem in surroundItems) {
+                        EditorTestUtil.performTypingAction(editor, surroundItem)
+                    }
+                    editor.caretModel.moveToOffset(editor.caretModel.offset - 2)
+                }
+
                 fixture.type(insertString)
 
                 it.setUpValue = Pair(initialText, FixtureEditorFile(file, editor.document, fixture))
@@ -417,6 +437,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                         }
                         cleanupCaches(project, file.virtualFile)
                     }
+                    commitAllDocuments()
                 }
             }
         )
@@ -552,82 +573,12 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         )
     }
 
-    protected fun perfFileAnalysis(name: String, stats: Stats, note: String = "") =
-        perfFileAnalysis(myProject!!, name, stats, note = note)
-
-    private fun perfFileAnalysis(
-        project: Project,
-        fileName: String,
-        stats: Stats,
-        note: String = ""
-    ) {
-        val disposable = Disposer.newDisposable("perfFileAnalysis $fileName")
-
-        MadTestingUtil.enableAllInspections(project, disposable)
-
-        try {
-            highlightFile {
-                stats.perfTest(
-                    testName = "fileAnalysis ${notePrefix(note)}${simpleFilename(fileName)}",
-                    setUp = perfFileAnalysisSetUp(project, fileName),
-                    test = perfFileAnalysisTest(project),
-                    tearDown = perfFileAnalysisTearDown(fileName, project)
-                )
-            }
-        } finally {
-            Disposer.dispose(disposable)
-        }
-    }
-
     fun notePrefix(note: String) = if (note.isNotEmpty()) {
         if (note.endsWith("/")) note else "$note "
     } else ""
 
-    fun perfFileAnalysisSetUp(
-        project: Project,
-        fileName: String
-    ): (TestData<FixtureEditorFile, List<HighlightInfo>>) -> Unit {
-        return {
-            val fileInEditor = openFileInEditor(project, fileName)
-
-            val file = fileInEditor.psiFile
-            val virtualFile = file.virtualFile
-            val editor = EditorFactory.getInstance().getEditors(fileInEditor.document, project)[0]
-            val fixture = EditorTestFixture(project, editor, virtualFile)
-
-            // Note: Kotlin scripts require dependencies to be loaded
-            if (isAKotlinScriptFile(fileName)) {
-                val vFile = fileInEditor.psiFile.virtualFile
-                ScriptDependenciesManager.updateScriptDependenciesSynchronously(vFile, project)
-            }
-
-            //enableHints(false)
-
-            println("fileAnalysis -> $fileName\n")
-            it.setUpValue = FixtureEditorFile(file, editor.document, fixture)
-        }
-    }
-
     // quite simple impl - good so far
     fun isAKotlinScriptFile(fileName: String) = fileName.endsWith(".kts")
-
-    fun perfFileAnalysisTest(project: Project): (TestData<FixtureEditorFile, List<HighlightInfo>>) -> Unit {
-        return {
-            it.value = it.setUpValue?.let { fef ->
-                fef.fixture.doHighlighting()
-            }
-        }
-    }
-
-    fun perfFileAnalysisTearDown(
-        fileName: String,
-        project: Project
-    ): (TestData<FixtureEditorFile, List<HighlightInfo>>) -> Unit {
-        return {
-            println("fileAnalysis <- $fileName:\n${it.value?.size ?: 0} highlightInfos\n")
-            cleanupCaches(project, it.setUpValue!!.psiFile.virtualFile)
-        }
-    }
 
     fun cleanupCaches(project: Project, vFile: VirtualFile) {
         commitAllDocuments()

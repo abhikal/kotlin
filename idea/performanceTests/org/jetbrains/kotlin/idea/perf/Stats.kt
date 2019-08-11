@@ -93,6 +93,21 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
         }
     }
 
+    fun printWarmUpTimings(
+        prefix: String,
+        errors: Array<Throwable?>,
+        warmUpTimingsNs: LongArray
+    ) {
+        assertEquals(warmUpTimingsNs.size, errors.size)
+        for (timing in warmUpTimingsNs.withIndex()) {
+            val attempt = timing.index
+            val n = "$name $prefix warm-up #$attempt"
+            printTestStarted(n)
+            val t = errors[attempt]
+            if (t != null) printTestFinished(n, t!!) else printTestFinished(n, timing.value.nsToMs)
+        }
+    }
+
     fun appendTimings(
         prefix: String,
         errors: Array<Throwable?>,
@@ -156,13 +171,12 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
         tearDown: (TestData<K, T>) -> Unit
     ) {
         val testData = TestData<K, T>(null, null)
+        val warmUpTimingsNs = LongArray(warmUpIterations)
+        val errors: Array<Throwable?> = Array(warmUpIterations, init = { null })
         for (attempt in 0 until warmUpIterations) {
             testData.reset()
 
             triggerGC(attempt)
-
-            val n = "$namePrefix warm-up #$attempt"
-            printTestStarted(n)
 
             try {
                 setUp(testData)
@@ -171,26 +185,18 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
                     spentNs = measureNanoTime {
                         test(testData)
                     }
-                } catch (t: Throwable) {
-                    println("error at $n:\n")
-
-                    t.printStackTrace()
-
-                    println("\n")
-
-                    tcPrintErrors(n, listOf(t))
-                    throw t
                 } finally {
                     tearDown(testData)
                 }
-                printTestFinished(n, spentNs.nsToMs)
+                warmUpTimingsNs[attempt] = spentNs
             } catch (t: Throwable) {
-                println("##teamcity[testFinished name='$n']")
-                println("error at $n:")
-                tcPrintErrors(n, listOf(t))
-                throw t
+                errors[attempt] = t
             }
         }
+
+        printWarmUpTimings(namePrefix, errors, warmUpTimingsNs)
+
+        errors.find { it != null }?.let { throw it }
     }
 
     fun printTestStarted(testName: String) {
@@ -200,6 +206,14 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
     fun printTestFinished(testName: String, spentMs: Long) {
         println("##teamcity[buildStatisticValue key='$testName' value='$spentMs']")
         println("##teamcity[testFinished name='$testName' duration='$spentMs']")
+    }
+
+    fun printTestFinished(testName: String, error: Throwable) {
+        println("error at $testName:")
+        tcPrintErrors(testName, listOf(error))
+
+        println("##teamcity[buildStatisticValue key='$testName' value='-1']")
+        println("##teamcity[testFinished name='$testName']")
     }
 
     private fun triggerGC(attempt: Int) {

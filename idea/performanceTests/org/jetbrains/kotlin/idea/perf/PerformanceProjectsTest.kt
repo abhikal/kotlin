@@ -21,7 +21,6 @@ import com.intellij.testFramework.propertyBased.MadTestingUtil
 import org.jetbrains.kotlin.idea.core.script.ScriptDependenciesManager
 import org.jetbrains.kotlin.idea.highlighter.KotlinPsiChecker
 import org.jetbrains.kotlin.idea.highlighter.KotlinPsiCheckerAndHighlightingUpdater
-import org.jetbrains.kotlin.idea.perf.WholeProjectPerformanceTest.Companion.nsToMs
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.test.assertNotEquals
 
@@ -80,15 +79,35 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
 
                 perfHighlightFile("compiler/psi/src/org/jetbrains/kotlin/psi/KtFile.kt", stats = it)
 
-//                typeAndCheckLookup(
-//                    myProject!!,
-//                    "compiler/psi/src/org/jetbrains/kotlin/psi/KtFile.kt",
-//                    "override fun getDeclarations(): List<KtDeclaration> {",
-//                    "val q = import",
-//                    lookupElements = listOf("importDirectives")
-//                )
-
                 perfHighlightFile("compiler/psi/src/org/jetbrains/kotlin/psi/KtElement.kt", stats = it)
+            }
+        }
+    }
+
+    fun testKotlinProjectCompletionKtFile() {
+        tcSuite("Kotlin completion ktFile") {
+            val stats = Stats("Kotlin completion ktFile")
+            stats.use { stat ->
+                perfOpenKotlinProject(stat)
+
+                perfTypeAndAutocomplete(
+                    stat,
+                    "compiler/psi/src/org/jetbrains/kotlin/psi/KtFile.kt",
+                    "override fun getDeclarations(): List<KtDeclaration> {",
+                    "val q = import",
+                    lookupElements = listOf("importDirectives"),
+                    note = "in-method getDeclarations-import"
+                )
+
+                perfTypeAndAutocomplete(
+                    stat,
+                    "compiler/psi/src/org/jetbrains/kotlin/psi/KtFile.kt",
+                    "override fun getDeclarations(): List<KtDeclaration> {",
+                    "val q = import",
+                    typeAfterMarker = false,
+                    lookupElements = listOf("importDirectives"),
+                    note = "out-of-method import"
+                )
             }
         }
     }
@@ -201,18 +220,16 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
                     tearDown = perfKtsFileAnalysisTearDown(extraTimingsNs, project)
                 )
 
-                for (timing in extraTimingsNs.take(warmUpIterations).withIndex()) {
-                    val attempt = timing.index
-                    val n = "${stats.name} $testName annotator warm-up #$attempt"
-                    extraStats.printTestStarted(n)
-                    extraStats.printTestFinished(n, timing.value.nsToMs)
-                }
+                extraStats.printWarmUpTimings(
+                    "annotator",
+                    Array(warmUpIterations, init = { null }),
+                    extraTimingsNs.take(warmUpIterations).toLongArray()
+                )
 
-                val timings = extraTimingsNs.drop(warmUpIterations).toLongArray()
                 extraStats.appendTimings(
                     "annotator",
-                    Array(timings.size, init = { null }),
-                    timings
+                    Array(iterations, init = { null }),
+                    extraTimingsNs.drop(warmUpIterations).toLongArray()
                 )
             }
         } finally {
@@ -232,6 +249,7 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
         val filteredExtensions =
             extensions.filter { it.language != "kotlin" || it.implementationClass != KotlinPsiCheckerAndHighlightingUpdater::class.java.name }
                 .toList()
+        // custom highlighter is already registered if filteredExtensions has the same size as extensions
         if (filteredExtensions.size < extensions.size) {
             PlatformTestUtil.maskExtensions(pointName, filteredExtensions + listOf(point), testRootDisposable)
         }
@@ -251,8 +269,7 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
 
             // Note: Kotlin scripts require dependencies to be loaded
             if (isAKotlinScriptFile(fileName)) {
-                val vFile = fileInEditor.psiFile.virtualFile
-                ScriptDependenciesManager.updateScriptDependenciesSynchronously(vFile, project)
+                ScriptDependenciesManager.updateScriptDependenciesSynchronously(fileInEditor.psiFile.virtualFile, project)
             }
 
             resetTimestamp()
