@@ -63,7 +63,7 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
 
     fun testHelloWorldProject() {
         tcSuite("Hello world project") {
-            perfOpenProject("helloKotlin", hwStats)
+            myProject = perfOpenHelloWorld(hwStats)
 
             // highlight
             perfHighlightFile("src/HelloMain.kt", hwStats)
