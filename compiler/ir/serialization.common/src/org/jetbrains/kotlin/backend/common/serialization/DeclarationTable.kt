@@ -43,6 +43,7 @@ abstract class DeclarationTable(val builtIns: IrBuiltIns, val descriptorTable: D
             !value.isExported()
             || value is IrVariable
             || value is IrValueParameter
+            || value is IrTypeParameter
             || value is IrAnonymousInitializer
             || value is IrLocalDelegatedProperty
         ) {

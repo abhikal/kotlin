@@ -18,7 +18,7 @@ message UniqIdTable {
 
 message ExternalReference {
   required int64 id = 1;
-  required int32 index = 2; /* index into the modules table of ExternalRefs */
+  required int32 index = 2; /* index into the table of packages in ExternalRefs */
 }
 
 message JvmExternalPackage {

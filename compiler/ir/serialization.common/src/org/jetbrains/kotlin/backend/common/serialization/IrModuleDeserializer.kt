@@ -132,7 +132,7 @@ abstract class IrModuleDeserializer(
 
     abstract fun deserializeIrSymbol(proto: ProtoSymbol): IrSymbol
     abstract fun deserializeIrType(proto: ProtoTypeIndex): IrType
-    abstract fun deserializeDescriptorReference(proto: ProtoDescriptorReference): DeclarationDescriptor
+    abstract fun deserializeDescriptorReference(proto: ProtoDescriptorReference): DeclarationDescriptor?
     abstract fun deserializeString(proto: ProtoString): String
     abstract fun deserializeLoopHeader(loopIndex: Int, loopBuilder: () -> IrLoopBase): IrLoopBase
 

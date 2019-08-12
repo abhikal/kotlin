@@ -218,20 +218,21 @@ abstract class KotlinIrLinker(
             return symbol
         }
 
-        override fun deserializeDescriptorReference(proto: ProtoDescriptorReference) =
+        override fun deserializeDescriptorReference(proto: ProtoDescriptorReference) = with(proto) {
             descriptorReferenceDeserializer.deserializeDescriptorReference(
-                deserializeString(proto.packageFqName),
-                deserializeString(proto.classFqName),
-                deserializeString(proto.name),
-                if (proto.hasUniqId()) proto.uniqId.index else null,
-                isEnumEntry = proto.isEnumEntry,
-                isEnumSpecial = proto.isEnumSpecial,
-                isDefaultConstructor = proto.isDefaultConstructor,
-                isFakeOverride = proto.isFakeOverride,
-                isGetter = proto.isGetter,
-                isSetter = proto.isSetter,
-                isTypeParameter = proto.isTypeParameter
-            )
+                deserializeString(packageFqName),
+                deserializeString(classFqName),
+                deserializeString(name),
+                if (hasUniqId()) uniqId.index else null,
+                isEnumEntry = isEnumEntry,
+                isEnumSpecial = isEnumSpecial,
+                isDefaultConstructor = isDefaultConstructor,
+                isFakeOverride = isFakeOverride,
+                isGetter = isGetter,
+                isSetter = isSetter,
+                isTypeParameter = isTypeParameter
+            ) ?: error("Could not find serialized descriptor for index: ${uniqId.index} ${packageFqName},${classFqName},${name}")
+        }
 
         // TODO: this is JS specific. Eliminate me.
         override fun getPrimitiveTypeOrNull(symbol: IrClassifierSymbol, hasQuestionMark: Boolean) =
