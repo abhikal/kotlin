@@ -35,6 +35,7 @@ import com.intellij.openapi.module.ModuleTypeId
 import com.intellij.openapi.project.DumbService
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ex.ProjectManagerEx
+import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.project.impl.ProjectImpl
 import com.intellij.openapi.projectRoots.JavaSdk
 import com.intellij.openapi.projectRoots.ProjectJdkTable
@@ -277,6 +278,8 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
 
         ExternalProjectsManagerImpl.getInstance(project).setStoreExternally(false)
 
+        GradleProjectOpenProcessor.openGradleProject(project, null, Paths.get(projectPath))
+
         ExternalSystemUtil.refreshProjects(
             ImportSpecBuilder(project, GradleConstants.SYSTEM_ID)
                 .forceWhenUptodate()
@@ -390,7 +393,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                 }
 
                 val tasksIdx = fileInEditor.document.text.indexOf(marker)
-                assertTrue(tasksIdx > 0)
+                assertTrue("marker '$marker' not found in $fileName", tasksIdx > 0)
                 if (typeAfterMarker) {
                     editor.caretModel.moveToOffset(tasksIdx + marker.length + 1)
                 } else {
@@ -622,7 +625,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
 
     private fun projectFileByName(project: Project, name: String): PsiFile {
         val fileManager = VirtualFileManager.getInstance()
-        val url = "file://${File("${project.basePath}/$name").absolutePath}"
+        val url = "${project.guessProjectDir()}/$name"
         val virtualFile = fileManager.refreshAndFindFileByUrl(url)
         if (virtualFile != null) {
             return virtualFile!!.toPsiFile(project)!!
@@ -636,7 +639,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
             baseFileName, true,
             GlobalSearchScope.projectScope(project)
         )
-            .filter { it.canonicalPath?.contains("$projectBaseName/$name") ?: false }.toList()
+            .filter { it.canonicalPath?.contains("/$projectBaseName/$name") ?: false }.toList()
 
         assertEquals(
             "expected the only file with name '$name'\n, it were: [${virtualFiles.map { it.canonicalPath }.joinToString("\n")}]",
