@@ -68,8 +68,7 @@ class JvmIrDeserializer(
             val moduleDeserializer = ModuleDeserializerWithReferenceLookup(moduleDescriptor, irProto.auxTables, backoff)
             consumeUniqIdTable(irProto.auxTables.uniqIdTable, moduleDeserializer)
             consumeExternalRefsTable(irProto.auxTables.externalRefs)
-            val deserializedToplevel = moduleDeserializer.deserializeIrClass(irProto.irClass)
-            deserializedToplevel.patchDeclarationParents(packageFragment) // TODO: toplevel's parent should be the module
+            moduleDeserializer.deserializeIrClass(irProto.irClass, parent = packageFragment)
             assert(symbol.isBound)
             return symbol.owner as IrDeclaration
         } else {
@@ -84,10 +83,9 @@ class JvmIrDeserializer(
             consumeExternalRefsTable(irProto.auxTables.externalRefs)
 
             for (declaration in irProto.declarationContainer.declarationList) {
-                val member = moduleDeserializer.deserializeDeclaration(declaration, packageFragment)
+                val member = moduleDeserializer.deserializeDeclaration(declaration, parent = packageFragment)
                 packageFragment.declarations.add(member)
             }
-            packageFragment.patchDeclarationParents(packageFragment)
             assert(symbol.isBound)
             return symbol.owner as IrDeclaration
         }
