@@ -6,7 +6,9 @@
 package org.jetbrains.kotlin.idea.perf
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.runWriteAction
 import com.intellij.openapi.editor.Document
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl
 import com.intellij.openapi.project.Project
@@ -21,22 +23,34 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 fun commitAllDocuments() {
+    val fileDocumentManager = FileDocumentManager.getInstance()
+    runInEdtAndWait {
+        fileDocumentManager.saveAllDocuments()
+    }
+
     ProjectManagerEx.getInstanceEx().openProjects.forEach { project ->
         val psiDocumentManagerBase = PsiDocumentManager.getInstance(project) as PsiDocumentManagerBase
 
-        EdtTestUtil.runInEdtAndWait(ThrowableRunnable {
+        runInEdtAndWait {
             psiDocumentManagerBase.clearUncommittedDocuments()
             psiDocumentManagerBase.commitAllDocuments()
-        })
+        }
     }
 }
 
 fun commitDocument(project: Project, document: Document) {
     val psiDocumentManagerBase = PsiDocumentManager.getInstance(project) as PsiDocumentManagerBase
-
-    EdtTestUtil.runInEdtAndWait(ThrowableRunnable {
+    runInEdtAndWait {
         psiDocumentManagerBase.commitDocument(document)
-    })
+    }
+}
+
+fun saveDocument(document: Document) {
+    val fileDocumentManager = FileDocumentManager.getInstance()
+
+    runInEdtAndWait {
+        fileDocumentManager.saveDocument(document)
+    }
 }
 
 fun enableHints(enable: Boolean) =

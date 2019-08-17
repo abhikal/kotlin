@@ -144,8 +144,11 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         return if (lastIndexOf >= 0) fileName.substring(lastIndexOf + 1) else fileName
     }
 
-    protected fun perfOpenKotlinProject(stats: Stats) {
-        myProject = innerPerfOpenProject("kotlin", stats = stats, path = "../perfTestProject", note = "")
+    protected fun perfOpenKotlinProjectFast(stats: Stats) =
+        perfOpenKotlinProject(stats, fast = true)
+
+    protected fun perfOpenKotlinProject(stats: Stats, fast: Boolean = false) {
+        myProject = innerPerfOpenProject("kotlin", stats = stats, path = "../perfTestProject", note = "", fast = fast)
     }
 
     protected fun perfOpenHelloWorld(stats: Stats, note: String = ""): Project =
@@ -156,12 +159,13 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         stats: Stats,
         note: String,
         path: String,
-        simpleModule: Boolean = false
+        simpleModule: Boolean = false,
+        fast: Boolean = false
     ): Project {
         val projectPath = File("$path").canonicalPath
 
-        val warmUpIterations = 1
-        val iterations = 3
+        val warmUpIterations = if (fast) 0 else 1
+        val iterations = if (fast) 1 else 3
         val projectManagerEx = ProjectManagerEx.getInstanceEx()
 
         var lastProject: Project? = null
@@ -175,7 +179,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                 val project = if (!simpleModule) {
                     val project = projectManagerEx.loadProject(name, path)
                     assertNotNull(project)
-                    projectManagerEx.openTestProject(project!!)
+                    //projectManagerEx.openTestProject(project!!)
                     project
                 } else {
                     val project = projectManagerEx.loadAndOpenProject(projectPath)!!
@@ -204,7 +208,9 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
             tearDown = {
                 it.value?.let { project ->
 
-                    refreshGradleProjectIfNeeded(projectPath, project)
+                    runAndMeasure("refresh gradle project $name") {
+                        refreshGradleProjectIfNeeded(projectPath, project)
+                    }
 
                     ApplicationManager.getApplication().executeOnPooledThread {
                         DumbService.getInstance(project).waitForSmartMode()
@@ -226,7 +232,7 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                         project.save()
                     }
 
-                    println("project '$name' successfully opened")
+                    println("# project '$name' successfully opened")
 
                     // close all project but last - we're going to return and use it further
                     if (counter < warmUpIterations + iterations - 1) {
@@ -290,6 +296,9 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
         dispatchAllInvocationEvents()
         ExternalProjectsManagerImpl.getInstance(project).setStoreExternally(false)
         dispatchAllInvocationEvents()
+
+        // WARNING: [VD] DO NOT SAVE PROJECT AS IT COULD PERSIST WRONG MODULES INFO
+
 //        runInEdtAndWait {
 //            PlatformTestUtil.saveProject(project)
 //        }
@@ -389,7 +398,9 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                 val fixture = EditorTestFixture(project, editor, virtualFile)
                 val initialText = editor.document.text
                 if (isAKotlinScriptFile(fileName)) {
-                    ScriptDependenciesManager.updateScriptDependenciesSynchronously(virtualFile, project)
+                    runAndMeasure("update script dependencies for $fileName") {
+                        ScriptDependenciesManager.updateScriptDependenciesSynchronously(virtualFile, project)
+                    }
                 }
 
                 val tasksIdx = fileInEditor.document.text.indexOf(marker)
@@ -433,16 +444,20 @@ abstract class AbstractPerformanceProjectsTest : UsefulTestCase() {
                         val file = pair.second.psiFile
                         val text = pair.first
 
-                        if (revertChangesAtTheEnd) {
-                            runWriteAction {
-                                // TODO: [VD] revert ?
-                                //editorFixture.performEditorAction(IdeActions.SELECTED_CHANGES_ROLLBACK)
-                                document.setText(text)
-                                commitDocument(project, document)
+                        try {
+                            if (revertChangesAtTheEnd) {
+                                runWriteAction {
+                                    // TODO: [VD] revert ?
+                                    //editorFixture.performEditorAction(IdeActions.SELECTED_CHANGES_ROLLBACK)
+                                    document.setText(text)
+                                    saveDocument(document)
+                                    commitDocument(project, document)
+                                }
+                                dispatchAllInvocationEvents()
                             }
-                            dispatchAllInvocationEvents()
+                        } finally {
+                            cleanupCaches(project, file.virtualFile)
                         }
-                        cleanupCaches(project, file.virtualFile)
                     }
                     commitAllDocuments()
                 }

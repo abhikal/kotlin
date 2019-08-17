@@ -88,7 +88,7 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
         tcSuite("Kotlin completion ktFile") {
             val stats = Stats("Kotlin completion ktFile")
             stats.use { stat ->
-                perfOpenKotlinProject(stat)
+                perfOpenKotlinProjectFast(stat)
 
                 perfTypeAndAutocomplete(
                     stat,
@@ -116,16 +116,20 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
         tcSuite("Kotlin completion gradle.kts") {
             val stats = Stats("kotlin completion gradle.kts")
             stats.use { stat ->
-                perfOpenKotlinProject(stat)
+                runAndMeasure("open kotlin project") {
+                    perfOpenKotlinProjectFast(stat)
+                }
 
-                perfTypeAndAutocomplete(
-                    stat,
-                    "build.gradle.kts",
-                    "tasks {",
-                    "crea",
-                    lookupElements = listOf("create"),
-                    note = "tasks-create"
-                )
+                runAndMeasure("type and autocomplete") {
+                    perfTypeAndAutocomplete(
+                        stat,
+                        "build.gradle.kts",
+                        "tasks {",
+                        "crea",
+                        lookupElements = listOf("create"),
+                        note = "tasks-create"
+                    )
+                }
             }
         }
     }
@@ -134,7 +138,7 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
         tcSuite("Kotlin scriptDependencies gradle.kts") {
             val stats = Stats("kotlin scriptDependencies gradle.kts")
             stats.use { stat ->
-                perfOpenKotlinProject(stat)
+                perfOpenKotlinProjectFast(stat)
 
                 perfScriptDependenciesBuildGradleKts(stat)
                 perfScriptDependenciesIdeaBuildGradleKts(stat)
@@ -148,7 +152,7 @@ class PerformanceProjectsTest : AbstractPerformanceProjectsTest() {
         tcSuite("Kotlin gradle.kts") {
             val stats = Stats("kotlin gradle.kts")
             stats.use { stat ->
-                perfOpenKotlinProject(stat)
+                perfOpenKotlinProjectFast(stat)
 
                 perfFileAnalysisBuildGradleKts(stat)
                 perfFileAnalysisIdeaBuildGradleKts(stat)

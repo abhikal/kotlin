@@ -13,6 +13,7 @@ import kotlin.system.measureNanoTime
 import java.lang.ref.WeakReference
 import kotlin.math.exp
 import kotlin.math.ln
+import kotlin.system.measureTimeMillis
 import kotlin.test.assertEquals
 
 class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "ValueMS", "StdDev")) : Closeable {
@@ -143,18 +144,24 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
                 testData.reset()
                 triggerGC(attempt)
 
-                setUp(testData)
+                val setUpMillis = measureTimeMillis {
+                    setUp(testData)
+                }
+                println("-- setup took $setUpMillis ms")
                 try {
                     val spentNs = measureNanoTime {
                         test(testData)
                     }
                     timingsNs[attempt] = spentNs
                 } catch (t: Throwable) {
-                    println("error at $namePrefix #$attempt:")
+                    println("# error at $namePrefix #$attempt:")
                     t.printStackTrace()
                     errors[attempt] = t
                 } finally {
-                    tearDown(testData)
+                    val tearDownMillis = measureTimeMillis {
+                        tearDown(testData)
+                    }
+                    println("-- tearDown took $tearDownMillis ms")
                 }
             }
         } catch (t: Throwable) {
@@ -179,14 +186,20 @@ class Stats(val name: String = "", val header: Array<String> = arrayOf("Name", "
             triggerGC(attempt)
 
             try {
-                setUp(testData)
+                val setUpMillis = measureTimeMillis {
+                    setUp(testData)
+                }
+                println("-- setup took $setUpMillis ms")
                 var spentNs: Long = 0
                 try {
                     spentNs = measureNanoTime {
                         test(testData)
                     }
                 } finally {
-                    tearDown(testData)
+                    val tearDownMillis = measureTimeMillis {
+                        tearDown(testData)
+                    }
+                    println("-- tearDown took $tearDownMillis ms")
                 }
                 warmUpTimingsNs[attempt] = spentNs
             } catch (t: Throwable) {
@@ -244,6 +257,13 @@ data class TestData<SV, V>(var setUpValue: SV?, var value: V?) {
         setUpValue = null
         value = null
     }
+}
+
+inline fun runAndMeasure(note: String, block: () -> Unit) {
+    val openProjectMillis = measureTimeMillis {
+        block()
+    }
+    println("-- $note took $openProjectMillis ms")
 }
 
 inline fun tcSuite(name: String, block: () -> Unit) {
