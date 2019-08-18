@@ -123,6 +123,10 @@ extend ValueParameter {
   optional int64 value_param_uniq_id = 100;
 }
 
+extend TypeAlias {
+  optional int64 type_alias_uniq_id = 100;
+}
+
 extend Type {
   repeated Annotation type_annotation = 100;
   optional bool is_raw = 101;

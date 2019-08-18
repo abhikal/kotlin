@@ -33,6 +33,8 @@ class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val fallback: (IrSy
                 ?: referenceAndHash(this)
             is DeserializedTypeParameterDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.typeParamUniqId)
                 ?: referenceAndHash(this)
+            is DeserializedTypeAliasDescriptor -> this.proto.tryGetExtension(JvmProtoBuf.typeAliasUniqId)
+                ?: referenceAndHash(this)
             is JavaClassDescriptor,
             is JavaClassConstructorDescriptor,
             is JavaMethodDescriptor,

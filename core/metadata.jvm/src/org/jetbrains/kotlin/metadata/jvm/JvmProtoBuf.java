@@ -17,6 +17,7 @@ public final class JvmProtoBuf {
     registry.add(org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf.propertyUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf.enumEntryUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf.valueParamUniqId);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf.typeAliasUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf.typeAnnotation);
     registry.add(org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf.isRaw);
     registry.add(org.jetbrains.kotlin.metadata.jvm.JvmProtoBuf.typeParameterAnnotation);
@@ -3961,6 +3962,22 @@ public final class JvmProtoBuf {
       java.lang.Long> valueParamUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessageLite
           .newSingularGeneratedExtension(
         org.jetbrains.kotlin.metadata.ProtoBuf.ValueParameter.getDefaultInstance(),
+        0L,
+        null,
+        null,
+        100,
+        org.jetbrains.kotlin.protobuf.WireFormat.FieldType.INT64,
+        java.lang.Long.class);
+  public static final int TYPE_ALIAS_UNIQ_ID_FIELD_NUMBER = 100;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.TypeAlias { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessageLite.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.ProtoBuf.TypeAlias,
+      java.lang.Long> typeAliasUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessageLite
+          .newSingularGeneratedExtension(
+        org.jetbrains.kotlin.metadata.ProtoBuf.TypeAlias.getDefaultInstance(),
         0L,
         null,
         null,

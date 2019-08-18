@@ -188,6 +188,10 @@ class JvmIrDeserializer(
                 symbolTable.referenceProperty(
                     descriptor as PropertyDescriptor? ?: WrappedPropertyDescriptor()
                 )
+            ProtoSymbolKind.TYPEALIAS_SYMBOL ->
+                symbolTable.referenceTypeAlias(
+                    descriptor as TypeAliasDescriptor? ?: WrappedTypeAliasDescriptor()
+                )
             else -> TODO("Unexpected classifier symbol kind: ${proto.kind}")
         }
 

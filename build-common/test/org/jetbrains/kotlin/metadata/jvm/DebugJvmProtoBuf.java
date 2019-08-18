@@ -17,6 +17,7 @@ public final class DebugJvmProtoBuf {
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.propertyUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.enumEntryUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.valueParamUniqId);
+    registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.typeAliasUniqId);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.typeAnnotation);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.isRaw);
     registry.add(org.jetbrains.kotlin.metadata.jvm.DebugJvmProtoBuf.typeParameterAnnotation);
@@ -4637,6 +4638,17 @@ public final class DebugJvmProtoBuf {
           .newFileScopedGeneratedExtension(
         java.lang.Long.class,
         null);
+  public static final int TYPE_ALIAS_UNIQ_ID_FIELD_NUMBER = 100;
+  /**
+   * <code>extend .org.jetbrains.kotlin.metadata.TypeAlias { ... }</code>
+   */
+  public static final
+    org.jetbrains.kotlin.protobuf.GeneratedMessage.GeneratedExtension<
+      org.jetbrains.kotlin.metadata.DebugProtoBuf.TypeAlias,
+      java.lang.Long> typeAliasUniqId = org.jetbrains.kotlin.protobuf.GeneratedMessage
+          .newFileScopedGeneratedExtension(
+        java.lang.Long.class,
+        null);
   public static final int TYPE_ANNOTATION_FIELD_NUMBER = 100;
   /**
    * <code>extend .org.jetbrains.kotlin.metadata.Type { ... }</code>
@@ -4837,29 +4849,31 @@ public final class DebugJvmProtoBuf {
       "uniq_id\022(.org.jetbrains.kotlin.metadata." +
       "EnumEntry\030d \001(\003:J\n\023value_param_uniq_id\022-" +
       ".org.jetbrains.kotlin.metadata.ValuePara" +
-      "meter\030d \001(\003:g\n\017type_annotation\022#.org.jet" +
-      "brains.kotlin.metadata.Type\030d \003(\0132).org." +
-      "jetbrains.kotlin.metadata.Annotation:3\n\006",
-      "is_raw\022#.org.jetbrains.kotlin.metadata.T" +
-      "ype\030e \001(\010:z\n\031type_parameter_annotation\022," +
-      ".org.jetbrains.kotlin.metadata.TypeParam" +
-      "eter\030d \003(\0132).org.jetbrains.kotlin.metada" +
-      "ta.Annotation:H\n\022type_param_uniq_id\022,.or" +
-      "g.jetbrains.kotlin.metadata.TypeParamete" +
-      "r\030e \001(\003:E\n\021class_module_name\022$.org.jetbr" +
-      "ains.kotlin.metadata.Class\030e \001(\005B\004\230\265\030\001:k" +
-      "\n\024class_local_variable\022$.org.jetbrains.k" +
-      "otlin.metadata.Class\030f \003(\0132\'.org.jetbrai",
-      "ns.kotlin.metadata.Property:P\n\034anonymous" +
-      "_object_origin_name\022$.org.jetbrains.kotl" +
-      "in.metadata.Class\030g \001(\005B\004\230\265\030\001:;\n\rclass_u" +
-      "niq_id\022$.org.jetbrains.kotlin.metadata.C" +
-      "lass\030h \001(\003:I\n\023package_module_name\022&.org." +
-      "jetbrains.kotlin.metadata.Package\030e \001(\005B" +
-      "\004\230\265\030\001:o\n\026package_local_variable\022&.org.je" +
-      "tbrains.kotlin.metadata.Package\030f \003(\0132\'." +
-      "org.jetbrains.kotlin.metadata.PropertyB\022" +
-      "B\020DebugJvmProtoBuf"
+      "meter\030d \001(\003:D\n\022type_alias_uniq_id\022(.org." +
+      "jetbrains.kotlin.metadata.TypeAlias\030d \001(" +
+      "\003:g\n\017type_annotation\022#.org.jetbrains.kot",
+      "lin.metadata.Type\030d \003(\0132).org.jetbrains." +
+      "kotlin.metadata.Annotation:3\n\006is_raw\022#.o" +
+      "rg.jetbrains.kotlin.metadata.Type\030e \001(\010:" +
+      "z\n\031type_parameter_annotation\022,.org.jetbr" +
+      "ains.kotlin.metadata.TypeParameter\030d \003(\013" +
+      "2).org.jetbrains.kotlin.metadata.Annotat" +
+      "ion:H\n\022type_param_uniq_id\022,.org.jetbrain" +
+      "s.kotlin.metadata.TypeParameter\030e \001(\003:E\n" +
+      "\021class_module_name\022$.org.jetbrains.kotli" +
+      "n.metadata.Class\030e \001(\005B\004\230\265\030\001:k\n\024class_lo",
+      "cal_variable\022$.org.jetbrains.kotlin.meta" +
+      "data.Class\030f \003(\0132\'.org.jetbrains.kotlin." +
+      "metadata.Property:P\n\034anonymous_object_or" +
+      "igin_name\022$.org.jetbrains.kotlin.metadat" +
+      "a.Class\030g \001(\005B\004\230\265\030\001:;\n\rclass_uniq_id\022$.o" +
+      "rg.jetbrains.kotlin.metadata.Class\030h \001(\003" +
+      ":I\n\023package_module_name\022&.org.jetbrains." +
+      "kotlin.metadata.Package\030e \001(\005B\004\230\265\030\001:o\n\026p" +
+      "ackage_local_variable\022&.org.jetbrains.ko" +
+      "tlin.metadata.Package\030f \003(\0132\'.org.jetbra",
+      "ins.kotlin.metadata.PropertyB\022B\020DebugJvm" +
+      "ProtoBuf"
     };
     org.jetbrains.kotlin.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new org.jetbrains.kotlin.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4915,16 +4929,17 @@ public final class DebugJvmProtoBuf {
     propertyUniqId.internalInit(descriptor.getExtensions().get(7));
     enumEntryUniqId.internalInit(descriptor.getExtensions().get(8));
     valueParamUniqId.internalInit(descriptor.getExtensions().get(9));
-    typeAnnotation.internalInit(descriptor.getExtensions().get(10));
-    isRaw.internalInit(descriptor.getExtensions().get(11));
-    typeParameterAnnotation.internalInit(descriptor.getExtensions().get(12));
-    typeParamUniqId.internalInit(descriptor.getExtensions().get(13));
-    classModuleName.internalInit(descriptor.getExtensions().get(14));
-    classLocalVariable.internalInit(descriptor.getExtensions().get(15));
-    anonymousObjectOriginName.internalInit(descriptor.getExtensions().get(16));
-    classUniqId.internalInit(descriptor.getExtensions().get(17));
-    packageModuleName.internalInit(descriptor.getExtensions().get(18));
-    packageLocalVariable.internalInit(descriptor.getExtensions().get(19));
+    typeAliasUniqId.internalInit(descriptor.getExtensions().get(10));
+    typeAnnotation.internalInit(descriptor.getExtensions().get(11));
+    isRaw.internalInit(descriptor.getExtensions().get(12));
+    typeParameterAnnotation.internalInit(descriptor.getExtensions().get(13));
+    typeParamUniqId.internalInit(descriptor.getExtensions().get(14));
+    classModuleName.internalInit(descriptor.getExtensions().get(15));
+    classLocalVariable.internalInit(descriptor.getExtensions().get(16));
+    anonymousObjectOriginName.internalInit(descriptor.getExtensions().get(17));
+    classUniqId.internalInit(descriptor.getExtensions().get(18));
+    packageModuleName.internalInit(descriptor.getExtensions().get(19));
+    packageLocalVariable.internalInit(descriptor.getExtensions().get(20));
     org.jetbrains.kotlin.protobuf.ExtensionRegistry registry =
         org.jetbrains.kotlin.protobuf.ExtensionRegistry.newInstance();
     registry.add(org.jetbrains.kotlin.metadata.DebugExtOptionsProtoBuf.stringIdInTable);
