@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.backend.jvm.serialization
 import org.jetbrains.kotlin.backend.common.serialization.DescriptorUniqIdAware
 import org.jetbrains.kotlin.backend.common.serialization.tryGetExtension
 import org.jetbrains.kotlin.builtins.functions.FunctionClassDescriptor
+import org.jetbrains.kotlin.builtins.functions.FunctionInvokeDescriptor
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationParent
@@ -39,7 +40,8 @@ class JvmDescriptorUniqIdAware(val symbolTable: SymbolTable, val fallback: (IrSy
             is JavaClassConstructorDescriptor,
             is JavaMethodDescriptor,
             is JavaPropertyDescriptor,
-            is FunctionClassDescriptor -> referenceAndHash(this)
+            is FunctionClassDescriptor,
+            is FunctionInvokeDescriptor -> referenceAndHash(this)
             else -> null
         }
 
